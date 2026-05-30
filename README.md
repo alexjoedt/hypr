@@ -29,6 +29,7 @@ This guide is a fast reference for your current setup in [hyprland.lua](hyprland
 
 ### Other Window Controls
 - Super + T: toggle floating for active window
+- Super + O: pop out — toggle floating and sticky (window follows across all workspaces)
 - Super + P: toggle pseudo-tiling for active window (dwindle)
 - Super + Left mouse drag: move window
 - Super + Right mouse drag: resize window

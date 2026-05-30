@@ -14,6 +14,10 @@ function M.setup(opts)
     hl.bind(mainMod .. " + M",         hl.dsp.exit())
     hl.bind(mainMod .. " + E",         hl.dsp.exec_cmd(fileManager))
     hl.bind(mainMod .. " + T",         hl.dsp.window.float({ action = "toggle" }))
+    hl.bind(mainMod .. " + O",         function() -- pop out: float + pin (follows across workspaces)
+        hl.dispatch(hl.dsp.window.float({ action = "toggle" }))
+        hl.dispatch(hl.dsp.window.pin())
+    end)
     hl.bind(mainMod .. " + Space",     hl.dsp.exec_cmd(menu))
     hl.bind(mainMod .. " + P",         hl.dsp.window.pseudo()) -- dwindle
     -- hl.bind(mainMod .. " + J",      hl.dsp.layout("togglesplit")) -- dwindle

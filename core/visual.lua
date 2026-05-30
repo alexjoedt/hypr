@@ -101,6 +101,16 @@ function M.setup()
         },
     })
 
+    -- https://wiki.hypr.land/Configuring/Basics/Variables/#group
+    hl.config({
+        group = {
+            groupbar = {
+                font_size = 14, -- default: 8
+                height    = 24, -- default: 14
+            },
+        },
+    })
+
     -- https://wiki.hypr.land/Configuring/Basics/Variables/#misc
     hl.config({
         misc = {

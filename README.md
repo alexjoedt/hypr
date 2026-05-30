@@ -1,93 +1,165 @@
-# Hyprland Quick Guide (This Config)
+# Hyprland Config — Quick Reference
 
-This guide is a fast reference for your current setup in [hyprland.lua](hyprland.lua).
+> A modular Hyprland setup written in Lua. Entry point: [hyprland.lua](hyprland.lua) — all modules live under [core/](core/).
 
-## Overview
-- Main modifier: Super (Windows key)
-- Keyboard layout: de (German)
-- Terminal: kitty
-- File manager: dolphin
-- App launcher: wofi --show drun
-- Main layout: dwindle
+---
 
-## Basics
-- Super + Return: open terminal
-- Super + Space: open app launcher
-- Super + E: open file manager
-- Super + W: close active window
-- Super + M: exit Hyprland session
+## Setup at a Glance
 
-## Move and Manage Windows
+| Setting          | Value                  |
+|------------------|------------------------|
+| Modifier key     | `SUPER` (Windows key)  |
+| Keyboard layout  | `de` (German)          |
+| Terminal         | `kitty`                |
+| File manager     | `dolphin`              |
+| App launcher     | `wofi --show drun`     |
+| Tiling layout    | `dwindle`              |
 
-### Move Focus
-- Super + H / L / K / J: move focus left / right / up / down (vim-style)
-- Super + Left / Right / Up / Down: same, with arrow keys
+---
 
-### Swap Windows
-- Super + Shift + H / L / K / J: swap active window left / right / up / down (vim-style)
-- Super + Shift + Left / Right / Up / Down: same, with arrow keys
+## Quickstart
 
-### Other Window Controls
-- Super + T: toggle floating for active window
-- Super + O: pop out — toggle floating and sticky (window follows across all workspaces)
-- Super + P: toggle pseudo-tiling for active window (dwindle)
-- Super + Left mouse drag: move window
-- Super + Right mouse drag: resize window
+The five shortcuts you need to know on day one:
+
+| Shortcut | Action |
+|---|---|
+| `SUPER` + `Return` | Open terminal |
+| `SUPER` + `Space` | Open app launcher |
+| `SUPER` + `E` | Open file manager |
+| `SUPER` + `W` | Close active window |
+| `SUPER` + `M` | Exit Hyprland |
+
+---
+
+## Window Navigation — Full Reference
+
+### Focus
+
+Move keyboard focus between windows using vim-style keys or arrow keys.
+
+| Shortcut | Direction |
+|---|---|
+| `SUPER` + `H` or `SUPER` + `←` | Focus left |
+| `SUPER` + `L` or `SUPER` + `→` | Focus right |
+| `SUPER` + `K` or `SUPER` + `↑` | Focus up |
+| `SUPER` + `J` or `SUPER` + `↓` | Focus down |
+
+### Swap / Move Windows
+
+Reorder windows within the tiling layout.
+
+| Shortcut | Action |
+|---|---|
+| `SUPER` + `SHIFT` + `H` or `SUPER` + `SHIFT` + `←` | Swap window left |
+| `SUPER` + `SHIFT` + `L` or `SUPER` + `SHIFT` + `→` | Swap window right |
+| `SUPER` + `SHIFT` + `K` or `SUPER` + `SHIFT` + `↑` | Swap window up |
+| `SUPER` + `SHIFT` + `J` or `SUPER` + `SHIFT` + `↓` | Swap window down |
+
+### Window State
+
+Toggle how a window behaves in the layout.
+
+| Shortcut | Action |
+|---|---|
+| `SUPER` + `T` | Toggle floating |
+| `SUPER` + `O` | Pop out — floating + sticky (follows you across all workspaces) |
+| `SUPER` + `P` | Toggle pseudo-tiling (dwindle) |
+| `SUPER` + `-` | Toggle split direction (vertical ↔ horizontal) for dwindle |
+| `SUPER` + Left mouse drag | Move floating window |
+| `SUPER` + Right mouse drag | Resize window |
 
 ### Groups (Tabbed Windows)
-- Super + G: create a group from the active window (press again to dissolve)
-- Super + Shift + G: lock the group — prevents new windows from auto-joining
-- Super + Tab: switch to next window in group
-- Super + Shift + Tab: switch to previous window in group
 
-### Expand Windows and Change Splits
-- Super + - (dash): toggle vertical/horizontal split for the active window (dwindle)
-- In dwindle, window sizes change automatically when you add/remove windows.
-- You can resize manually with Super + right mouse drag.
+Stack multiple windows into a single tile and switch between them with a tab bar.
+
+| Shortcut | Action |
+|---|---|
+| `SUPER` + `G` | Create group (press again to dissolve) |
+| `SUPER` + `SHIFT` + `G` | Lock group — prevents new windows from auto-joining |
+| `SUPER` + `Tab` | Switch to next window in group |
+| `SUPER` + `SHIFT` + `Tab` | Switch to previous window in group |
+
+---
 
 ## Workspaces
-### Switch Workspaces
-- Super + 1..9: go to workspace 1..9
-- Super + 0: go to workspace 10
-- Super + Ctrl + H / Left: go to previous existing workspace
-- Super + Ctrl + L / Right: go to next existing workspace
-- Super + mouse wheel down: next existing workspace
-- Super + mouse wheel up: previous existing workspace
 
-### Send Windows to Workspaces
-- Super + Shift + 1..9: move active window to workspace 1..9
-- Super + Shift + 0: move active window to workspace 10
+### Switch
 
-### Create Workspaces
-- Workspaces are created automatically when you switch to a number that is not active yet, or when you move a window there.
+| Shortcut | Action |
+|---|---|
+| `SUPER` + `1` … `9` | Go to workspace 1–9 |
+| `SUPER` + `0` | Go to workspace 10 |
+| `SUPER` + `CTRL` + `H` or `SUPER` + `CTRL` + `←` | Previous existing workspace |
+| `SUPER` + `CTRL` + `L` or `SUPER` + `CTRL` + `→` | Next existing workspace |
+| `SUPER` + scroll down | Next existing workspace |
+| `SUPER` + scroll up | Previous existing workspace |
+
+> Workspaces are created automatically — just switch to a number that doesn't exist yet.
+
+### Send Window to Workspace
+
+| Shortcut | Action |
+|---|---|
+| `SUPER` + `SHIFT` + `1` … `9` | Move active window to workspace 1–9 |
+| `SUPER` + `SHIFT` + `0` | Move active window to workspace 10 |
 
 ### Special Workspace (Scratchpad)
-- Super + S: toggle special workspace named magic
-- Super + Shift + S: move active window to special:magic
 
-## Useful System Shortcuts
-- XF86AudioRaiseVolume: volume +5%
-- XF86AudioLowerVolume: volume -5%
-- XF86AudioMute: mute/unmute output
-- XF86AudioMicMute: mute/unmute microphone
-- XF86MonBrightnessUp: brightness +5%
-- XF86MonBrightnessDown: brightness -5%
-- XF86AudioNext: next track
-- XF86AudioPrev: previous track
-- XF86AudioPlay / XF86AudioPause: play/pause
-- Super + Shift + B: run waybar launch script
+A hidden workspace you can summon and dismiss at any time — great for a persistent terminal or notes window.
 
-## Optional Recommended Additions (Not enabled yet)
-If you want fullscreen control, add this in [core/keybinding.lua](core/keybinding.lua):
+| Shortcut | Action |
+|---|---|
+| `SUPER` + `S` | Toggle `magic` scratchpad |
+| `SUPER` + `SHIFT` + `S` | Send active window to scratchpad |
+
+---
+
+## System & Media Shortcuts
+
+### Media
+
+> Requires `playerctl`.
+
+| Key | Action |
+|---|---|
+| `XF86AudioPlay` / `XF86AudioPause` | Play / Pause |
+| `XF86AudioNext` | Next track |
+| `XF86AudioPrev` | Previous track |
+
+### Volume
+
+> Controlled via `wpctl`.
+
+| Key | Action |
+|---|---|
+| `XF86AudioRaiseVolume` | Volume +5% |
+| `XF86AudioLowerVolume` | Volume −5% |
+| `XF86AudioMute` | Mute / unmute output |
+| `XF86AudioMicMute` | Mute / unmute microphone |
+
+### Brightness
+
+> Controlled via `brightnessctl`.
+
+| Key | Action |
+|---|---|
+| `XF86MonBrightnessUp` | Brightness +5% |
+| `XF86MonBrightnessDown` | Brightness −5% |
+
+### Misc
+
+| Shortcut | Action |
+|---|---|
+| `SUPER` + `SHIFT` + `B` | Reload Waybar (`~/.config/waybar/launch.sh`) |
+
+---
+
+## Optional: Fullscreen
+
+Not enabled by default. To add fullscreen support, open [core/keybinding.lua](core/keybinding.lua) and add:
 
 ```lua
 hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen({ mode = 0 }))
 ```
 
-Then reload Hyprland config.
-
-## Notes
-- Media shortcuts need playerctl.
-- Volume shortcuts use wpctl.
-- Brightness shortcuts use brightnessctl.
-- Waybar shortcut assumes ~/.config/waybar/launch.sh exists.
+Then reload the Hyprland config.

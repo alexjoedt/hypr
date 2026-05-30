@@ -1,7 +1,7 @@
 local M = {}
 
 M.terminal = "wezterm"
-M.fileManager = "dolphin"
+M.fileManager = "nautilus"
 M.menu = "walker"
 
 return M

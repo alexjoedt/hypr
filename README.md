@@ -14,7 +14,7 @@ This guide is a fast reference for your current setup in [hyprland.lua](hyprland
 - Super + Return: open terminal
 - Super + Space: open app launcher
 - Super + E: open file manager
-- Super + Q: close active window
+- Super + W: close active window
 - Super + M: exit Hyprland session
 
 ## Move and Manage Windows

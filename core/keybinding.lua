@@ -10,7 +10,7 @@ function M.setup(opts)
 
     -- Example binds, see https://wiki.hypr.land/Configuring/Basics/Binds/ for more
     hl.bind(mainMod .. " + Return",    hl.dsp.exec_cmd(terminal))
-    hl.bind(mainMod .. " + Q",         hl.dsp.window.close())
+    hl.bind(mainMod .. " + W",         hl.dsp.window.close())
     hl.bind(mainMod .. " + M",         hl.dsp.exit())
     hl.bind(mainMod .. " + E",         hl.dsp.exec_cmd(fileManager))
     hl.bind(mainMod .. " + T",         hl.dsp.window.float({ action = "toggle" }))

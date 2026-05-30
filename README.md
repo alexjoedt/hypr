@@ -18,7 +18,16 @@ This guide is a fast reference for your current setup in [hyprland.lua](hyprland
 - Super + M: exit Hyprland session
 
 ## Move and Manage Windows
-- Super + Left / Right / Up / Down: move focus between windows
+
+### Move Focus
+- Super + H / L / K / J: move focus left / right / up / down (vim-style)
+- Super + Left / Right / Up / Down: same, with arrow keys
+
+### Swap Windows
+- Super + Shift + H / L / K / J: swap active window left / right / up / down (vim-style)
+- Super + Shift + Left / Right / Up / Down: same, with arrow keys
+
+### Other Window Controls
 - Super + T: toggle floating for active window
 - Super + P: toggle pseudo-tiling for active window (dwindle)
 - Super + Left mouse drag: move window
@@ -60,14 +69,15 @@ This guide is a fast reference for your current setup in [hyprland.lua](hyprland
 - Super + Shift + B: run waybar launch script
 
 ## Optional Recommended Additions (Not enabled yet)
-If you want easier split and fullscreen control, add these in the keybindings section of [hyprland.lua](hyprland.lua):
+If you want fullscreen control, add this in the keybindings section of [core/keybinding.lua](core/keybinding.lua):
 
 ```lua
-hl.bind(mainMod .. " + J", hl.dsp.layout("togglesplit"))
 hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen({ mode = 0 }))
 ```
 
 Then reload Hyprland config.
+
+> **Note:** `Super + J` is now used for focus-down (vim navigation). The `togglesplit` bind suggestion has been removed.
 
 ## Notes
 - Media shortcuts need playerctl.

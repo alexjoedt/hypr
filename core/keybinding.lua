@@ -19,11 +19,25 @@ function M.setup(opts)
     -- hl.bind(mainMod .. " + J",      hl.dsp.layout("togglesplit")) -- dwindle
     hl.bind(mainMod .. " + SHIFT + B", hl.dsp.exec_cmd("~/.config/waybar/launch.sh"))
 
-    -- Move focus with mainMod + arrow keys
+    -- Move focus with mainMod + vim keys / arrow keys
+    hl.bind(mainMod .. " + H",     hl.dsp.focus({ direction = "left"  }))
+    hl.bind(mainMod .. " + L",     hl.dsp.focus({ direction = "right" }))
+    hl.bind(mainMod .. " + K",     hl.dsp.focus({ direction = "up"    }))
+    hl.bind(mainMod .. " + J",     hl.dsp.focus({ direction = "down"  }))
     hl.bind(mainMod .. " + left",  hl.dsp.focus({ direction = "left"  }))
     hl.bind(mainMod .. " + right", hl.dsp.focus({ direction = "right" }))
     hl.bind(mainMod .. " + up",    hl.dsp.focus({ direction = "up"    }))
     hl.bind(mainMod .. " + down",  hl.dsp.focus({ direction = "down"  }))
+
+    -- Swap windows with mainMod + SHIFT + vim keys / arrow keys
+    hl.bind(mainMod .. " + SHIFT + H",     hl.dsp.window.swap({ direction = "left"  }))
+    hl.bind(mainMod .. " + SHIFT + L",     hl.dsp.window.swap({ direction = "right" }))
+    hl.bind(mainMod .. " + SHIFT + K",     hl.dsp.window.swap({ direction = "up"    }))
+    hl.bind(mainMod .. " + SHIFT + J",     hl.dsp.window.swap({ direction = "down"  }))
+    hl.bind(mainMod .. " + SHIFT + left",  hl.dsp.window.swap({ direction = "left"  }))
+    hl.bind(mainMod .. " + SHIFT + right", hl.dsp.window.swap({ direction = "right" }))
+    hl.bind(mainMod .. " + SHIFT + up",    hl.dsp.window.swap({ direction = "up"    }))
+    hl.bind(mainMod .. " + SHIFT + down",  hl.dsp.window.swap({ direction = "down"  }))
 
     -- Switch workspaces with mainMod + [0-9]
     -- Move active window to a workspace with mainMod + SHIFT + [0-9]

@@ -74,6 +74,7 @@ hl.dsp.window.move({ workspace = n })
 hl.dsp.window.drag()
 hl.dsp.window.resize()
 hl.dsp.window.pseudo()
+hl.dsp.window.swap({ direction = "left"|"right"|"up"|"down" })
 hl.dsp.focus({ direction = "left"|"right"|"up"|"down" })
 hl.dsp.focus({ workspace = n|"e+1"|"e-1" })
 hl.dsp.workspace.toggle_special("name")
@@ -86,4 +87,9 @@ First use the local documentation in `wiki/` for quick reference while editing. 
 
 ## Other
 
-Always update the README.de if you add new modules or features that require user configuration.
+**Always update [README.md](../../README.md)** whenever you:
+- Add or change keybindings
+- Add new modules or features
+- Change any user-visible defaults (terminal, modifier key, layout, etc.)
+
+The README is the primary user reference — keep it in sync with the actual config.

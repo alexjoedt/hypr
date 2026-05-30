@@ -49,6 +49,8 @@ This guide is a fast reference for your current setup in [hyprland.lua](hyprland
 ### Switch Workspaces
 - Super + 1..9: go to workspace 1..9
 - Super + 0: go to workspace 10
+- Super + Ctrl + H / Left: go to previous existing workspace
+- Super + Ctrl + L / Right: go to next existing workspace
 - Super + mouse wheel down: next existing workspace
 - Super + mouse wheel up: previous existing workspace
 

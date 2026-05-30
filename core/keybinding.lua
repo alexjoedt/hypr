@@ -44,6 +44,12 @@ function M.setup(opts)
     hl.bind(mainMod .. " + SHIFT + up",    hl.dsp.window.swap({ direction = "up"    }))
     hl.bind(mainMod .. " + SHIFT + down",  hl.dsp.window.swap({ direction = "down"  }))
 
+    -- Groups (tabbed windows)
+    hl.bind(mainMod .. " + G",         hl.dsp.group.toggle())          -- create / dissolve group
+    hl.bind(mainMod .. " + SHIFT + G", hl.dsp.group.lock_active())     -- lock group (no auto-join)
+    hl.bind(mainMod .. " + Tab",       hl.dsp.group.next())            -- next tab in group
+    hl.bind(mainMod .. " + SHIFT + Tab", hl.dsp.group.prev())          -- prev tab in group
+
     -- Switch workspaces with mainMod + [0-9]
     -- Move active window to a workspace with mainMod + SHIFT + [0-9]
     for i = 1, 9 do

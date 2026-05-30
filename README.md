@@ -34,6 +34,12 @@ This guide is a fast reference for your current setup in [hyprland.lua](hyprland
 - Super + Left mouse drag: move window
 - Super + Right mouse drag: resize window
 
+### Groups (Tabbed Windows)
+- Super + G: create a group from the active window (press again to dissolve)
+- Super + Shift + G: lock the group — prevents new windows from auto-joining
+- Super + Tab: switch to next window in group
+- Super + Shift + Tab: switch to previous window in group
+
 ### Expand Windows and Change Splits
 - Super + - (dash): toggle vertical/horizontal split for the active window (dwindle)
 - In dwindle, window sizes change automatically when you add/remove windows.

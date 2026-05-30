@@ -68,6 +68,19 @@ Toggle how a window behaves in the layout.
 | `SUPER` + Left mouse drag | Move floating window |
 | `SUPER` + Right mouse drag | Resize window |
 
+### Resize Mode
+
+Press `SUPER` + `R` to enter resize mode, then use vim-style or arrow keys to resize the active window. Works for both tiled and floating windows. Press `Escape` to exit.
+
+| Shortcut | Action |
+|---|---|
+| `SUPER` + `R` | Enter resize mode |
+| `H` or `←` | Shrink horizontally |
+| `L` or `→` | Grow horizontally |
+| `K` or `↑` | Shrink vertically |
+| `J` or `↓` | Grow vertically |
+| `Escape` | Exit resize mode |
+
 ### Groups (Tabbed Windows)
 
 Stack multiple windows into a single tile and switch between them with a tab bar.

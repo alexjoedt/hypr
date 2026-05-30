@@ -33,10 +33,10 @@ This guide is a fast reference for your current setup in [hyprland.lua](hyprland
 - Super + Left mouse drag: move window
 - Super + Right mouse drag: resize window
 
-### Expand Windows and Change Splits (How it works here)
+### Expand Windows and Change Splits
+- Super + - (dash): toggle vertical/horizontal split for the active window (dwindle)
 - In dwindle, window sizes change automatically when you add/remove windows.
 - You can resize manually with Super + right mouse drag.
-- A direct split-toggle bind is currently disabled in your config (the togglesplit bind is commented).
 
 ## Workspaces
 ### Switch Workspaces
@@ -69,15 +69,13 @@ This guide is a fast reference for your current setup in [hyprland.lua](hyprland
 - Super + Shift + B: run waybar launch script
 
 ## Optional Recommended Additions (Not enabled yet)
-If you want fullscreen control, add this in the keybindings section of [core/keybinding.lua](core/keybinding.lua):
+If you want fullscreen control, add this in [core/keybinding.lua](core/keybinding.lua):
 
 ```lua
 hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen({ mode = 0 }))
 ```
 
 Then reload Hyprland config.
-
-> **Note:** `Super + J` is now used for focus-down (vim navigation). The `togglesplit` bind suggestion has been removed.
 
 ## Notes
 - Media shortcuts need playerctl.

@@ -8,6 +8,8 @@ function M.setup()
         hl.exec_cmd("walker --gapplication-service")
         --hl.exec_cmd(terminal)
         --hl.exec_cmd("nm-applet")
+        hl.exec_cmd("wl-paste --type text --watch cliphist store")
+        hl.exec_cmd("wl-paste --type image --watch cliphist store")
     end)
 end
 

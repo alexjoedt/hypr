@@ -13,7 +13,20 @@ function M.setup(opts)
     hl.bind(mainMod .. " + W",         hl.dsp.window.close())
     hl.bind(mainMod .. " + M",         hl.dsp.exit())
     hl.bind(mainMod .. " + E",         hl.dsp.exec_cmd(fileManager))
-    hl.bind(mainMod .. " + T",         hl.dsp.window.float({ action = "toggle" }))
+    hl.bind(mainMod .. " + T",         function() -- toggle float: center + resize with 100px top/bottom gap
+        local win = hl.get_active_window()
+        hl.dispatch(hl.dsp.window.float({ action = "toggle" }))
+        if win and not win.floating then
+            local gap = 100
+            local mon = hl.get_active_monitor()
+            if mon then
+                local w = math.floor(mon.width  / mon.scale * 0.8)
+                local h = math.floor(mon.height / mon.scale - 2 * gap)
+                hl.dispatch(hl.dsp.window.resize({ x = w, y = h }))
+            end
+            hl.dispatch(hl.dsp.window.center({}))
+        end
+    end)
     hl.bind(mainMod .. " + O",         function() -- pop out: float + pin (follows across workspaces)
         hl.dispatch(hl.dsp.window.float({ action = "toggle" }))
         hl.dispatch(hl.dsp.window.pin())

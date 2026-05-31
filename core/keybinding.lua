@@ -22,7 +22,7 @@ function M.setup(opts)
     hl.bind(mainMod .. " + P",         hl.dsp.window.pseudo()) -- dwindle
     -- hl.bind(mainMod .. " + J",      hl.dsp.layout("togglesplit")) -- dwindle
     hl.bind(mainMod .. " + minus",      hl.dsp.layout("togglesplit")) -- dwindle: toggle vertical/horizontal split
-    hl.bind(mainMod .. " + SHIFT + B", hl.dsp.exec_cmd("~/.config/waybar/launch.sh"))
+    hl.bind(mainMod .. " + SHIFT + B", hl.dsp.exec_cmd("wayle panel restart"))
 
     -- Move focus with mainMod + vim keys / arrow keys
     hl.bind(mainMod .. " + H",     hl.dsp.focus({ direction = "left"  }))

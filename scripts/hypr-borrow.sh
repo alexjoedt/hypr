@@ -42,8 +42,8 @@ pull() {
         --argjson m "$meta" \
         '{address:$a, origin:($o|tonumber), meta:$m}' > "$STATE"
 
-    hyprctl dispatch movetoworkspacesilent "$cur_ws,address:$addr"
-    hyprctl dispatch focuswindow "address:$addr"
+    hyprctl dispatch "hl.dsp.window.move({ workspace = ${cur_ws}, window = 'address:${addr}', follow = false })"
+    hyprctl dispatch "hl.dsp.focus({ window = 'address:${addr}' })"
 }
 
 return_window() {
@@ -56,11 +56,11 @@ return_window() {
     at_x=$(jq -r '.meta.at[0]' "$STATE")
     at_y=$(jq -r '.meta.at[1]' "$STATE")
 
-    hyprctl dispatch movetoworkspacesilent "$origin,address:$addr"
+    hyprctl dispatch "hl.dsp.window.move({ workspace = ${origin}, window = 'address:${addr}', follow = false })"
 
     # Floating-Position wiederherstellen
     if [ "$was_float" = "true" ]; then
-        hyprctl dispatch movewindowpixel "exact $at_x $at_y,address:$addr"
+        hyprctl dispatch "hl.dsp.window.move({ x = ${at_x}, y = ${at_y}, window = 'address:${addr}' })"
     fi
 
     rm -f "$STATE"

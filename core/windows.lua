@@ -1,31 +1,64 @@
 local M = {}
 
--- ─── Single-window auto-centering ────────────────────────────────────────────
--- Adjust these two values to control how a lone tiled window is inset.
--- On an ultrawide monitor, raise left_right_gap (e.g. 600–800) so the window
--- doesn't stretch across the full 21:9 width.
-local top_bottom_gap = 20   -- vertical inset (px) from the monitor edge
-local left_right_gap = 450  -- horizontal inset (px); increase for ultrawides
--- ─────────────────────────────────────────────────────────────────────────────
+-- ─── Single-window auto-centering (resolution-aware) ─────────────────────────
+-- Gaps are computed from each monitor's *logical* width (physical px ÷ scale).
+-- Thresholds and multipliers can be freely adjusted here.
+--
+-- Workspace selector breakdown:
+--   w[t1]     → workspace has exactly 1 tiled window  ("t" = tiled, "1" = count)
+--   m[NAME]   → scoped to a specific monitor by name (e.g. "eDP-1", "DP-1")
+-- Combining them gives each monitor its own rule, so gaps scale with the display.
+-- The rule activates when the tiled count reaches 1 and lifts automatically when
+-- a second window appears — normal multi-window gaps are never affected.
+-- See https://wiki.hypr.land/Configuring/Basics/Workspace-Rules/#workspace-selectors
+
+local function single_window_gaps(m)
+    -- Logical width accounts for HiDPI: a 4K screen scaled ×2 behaves like 1920px.
+    local lw = m.width / (m.scale or 1)
+
+    if lw > 2560 then
+        -- Ultrawide (≥21:9) or large 4K — push the window into a centred column.
+        -- 13 % of logical width per side keeps the window at ~74 % of the screen.
+        -- Raise the multiplier (e.g. 0.18) for an even narrower column.
+        local h_gap = math.floor(lw * 0.23)
+        return { top = 20, right = h_gap, bottom = 20, left = h_gap }
+    elseif lw > 1920 then
+        -- 1440p / QHD
+        return { top = 20, right = 200, bottom = 20, left = 200 }
+    else
+        -- Laptop / 1080p — minimal padding
+        return { top = 20, right = 20, bottom = 20, left = 20 }
+    end
+end
+
+local function register_centering_rule(m)
+    hl.workspace_rule({
+        workspace = "w[t1]m[" .. m.name .. "]",
+        gaps_out  = single_window_gaps(m),
+    })
+end
 
 function M.setup()
     -- See https://wiki.hypr.land/Configuring/Basics/Window-Rules/ for more
     -- See https://wiki.hypr.land/Configuring/Basics/Workspace-Rules/ for workspace rules
 
-    -- "w[t1]" selects any workspace that currently contains exactly ONE tiled
-    -- window ("t" = tiled, "1" = count of one).  The rule is dynamic: it
-    -- applies when the count reaches one and is removed when a second tiled
-    -- window appears, so normal multi-window gaps are restored automatically.
-    -- See https://wiki.hypr.land/Configuring/Basics/Workspace-Rules/#workspace-selectors
-    hl.workspace_rule({
-        workspace = "w[t1]",
-        gaps_out  = {
-            top    = top_bottom_gap,
-            right  = left_right_gap,
-            bottom = top_bottom_gap,
-            left   = left_right_gap,
-        },
-    })
+    -- Register rules at config-parse time so they survive config reloads.
+    -- hl.get_monitors() is available here because DRM/KMS initialises monitors
+    -- before the Lua config is evaluated.  On the very first boot, the list may
+    -- be empty; the hyprland.start fallback covers that edge case.
+    for _, m in ipairs(hl.get_monitors()) do
+        register_centering_rule(m)
+    end
+
+    -- Fallback: first boot where monitors may not yet be available above.
+    hl.on("hyprland.start", function()
+        for _, m in ipairs(hl.get_monitors()) do
+            register_centering_rule(m)
+        end
+    end)
+
+    -- Hot-plug: register a rule whenever a new display is connected.
+    hl.on("monitor.added", register_centering_rule)
 
     -- Example window rule
     -- hl.window_rule({ match = { class = "kitty", title = "kitty" }, float = true })

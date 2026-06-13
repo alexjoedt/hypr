@@ -38,7 +38,7 @@ function M.setup(opts)
     hl.bind(mainMod .. " + P",         hl.dsp.window.pseudo()) -- dwindle
     -- hl.bind(mainMod .. " + J",      hl.dsp.layout("togglesplit")) -- dwindle
     hl.bind(mainMod .. " + minus",      hl.dsp.layout("togglesplit")) -- dwindle: toggle vertical/horizontal split
-    hl.bind(mainMod .. " + SHIFT + space",     function() hl.plugin.hyprexpo.expo("toggle") end) -- workspace overview
+    hl.bind(mainMod .. " + SHIFT + O",     function() hl.plugin.hyprexpo.expo("toggle") end) -- workspace overview
 
     --lock screen
     hl.bind(mainMod .. " + I", hl.dsp.exec_cmd("hyprlock --quiet --grace 1"))

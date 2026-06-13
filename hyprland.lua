@@ -64,6 +64,12 @@ require("core.keybinding").setup({
 })
 
 -----------------
+-- PLUGINS     --
+-----------------
+
+require("core.plugins").setup()
+
+-----------------
 -- AUTOSTART   --
 -----------------
 

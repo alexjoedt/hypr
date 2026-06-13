@@ -13,7 +13,7 @@ function M.setup()
         hl.exec_cmd("qs")
         hl.exec_cmd("hyprctl reload -q")
         hl.exec_cmd("hypridle -q")
-        hl.exec_cmd("systemctl --user retart elephant")
+        hl.exec_cmd("systemctl --user restart elephant")
     end)
 end
 

@@ -10,9 +10,9 @@
 |------------------|------------------------|
 | Modifier key     | `SUPER` (Windows key)  |
 | Keyboard layout  | `de` (German)          |
-| Terminal         | `kitty`                |
-| File manager     | `dolphin`              |
-| App launcher     | `wofi --show drun`     |
+| Terminal         | `wezterm`              |
+| File manager     | `nautilus`             |
+| App launcher     | `walker`               |
 | Tiling layout    | `dwindle`              |
 
 ---
@@ -165,7 +165,6 @@ A hidden workspace you can summon and dismiss at any time — great for a persis
 |---|---|
 | `Print` | Screenshot whole screen → `~/Pictures/Screenshots/` |
 | `SUPER` + `Print` | Select an area, annotate with `satty`, copy to clipboard + save |
-| `SUPER` + `SHIFT` + `B` | Reload Waybar (`~/.config/waybar/launch.sh`) |
 
 ---
 

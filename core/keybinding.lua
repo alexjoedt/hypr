@@ -38,11 +38,14 @@ function M.setup(opts)
     hl.bind(mainMod .. " + P",         hl.dsp.window.pseudo()) -- dwindle
     -- hl.bind(mainMod .. " + J",      hl.dsp.layout("togglesplit")) -- dwindle
     hl.bind(mainMod .. " + minus",      hl.dsp.layout("togglesplit")) -- dwindle: toggle vertical/horizontal split
-    hl.bind(mainMod .. " + SHIFT + B", hl.dsp.exec_cmd("wayle panel restart"))
     hl.bind(mainMod .. " + SHIFT + space",     function() hl.plugin.hyprexpo.expo("toggle") end) -- workspace overview
 
     --lock screen
     hl.bind(mainMod .. " + I", hl.dsp.exec_cmd("hyprlock --quiet --grace 1"))
+
+    -- Borrow a window from another workspace / return it (hypr-borrow.sh)
+    hl.bind(mainMod .. " + B",         hl.dsp.exec_cmd("~/.config/hypr/scripts/hypr-borrow.sh pull"))
+    hl.bind(mainMod .. " + SHIFT + B", hl.dsp.exec_cmd("~/.config/hypr/scripts/hypr-borrow.sh return"))
 
     -- Screenshots (saved to ~/Pictures/Screenshots/)
     -- Print: grab the whole screen and save it directly

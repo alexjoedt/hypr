@@ -44,7 +44,7 @@ function M.toggle()
     -- uniform gaps centered (horizontal + vertical)
     hl.workspace_rule({
         workspace = tostring(id),
-        gaps_out  = 50, 200,
+        gaps_out  = { top = 20, right = side, bottom = 20, left = side },
     })
     focused[id] = true
 end

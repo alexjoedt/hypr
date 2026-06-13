@@ -17,13 +17,17 @@ pull() {
     # Fenster einlesen; Label für Anzeige, Daten getrennt halten
     declare -A MAP_ADDR MAP_WS
 
+    local cur_ws
+    cur_ws=$(hyprctl activeworkspace -j | jq '.id')
+
     local labels=""
     while IFS=$'\t' read -r addr ws label; do
         MAP_ADDR["$label"]="$addr"
         MAP_WS["$label"]="$ws"
         labels+="$label"$'\n'
     done < <(hyprctl clients -j \
-        | jq -r '.[] | select(.title != "") |
+        | jq -r --argjson cws "$cur_ws" '
+            .[] | select(.title != "" and .workspace.id != $cws) |
             "\(.address)\t\(.workspace.id)\t[\(.workspace.id)] \(.class) — \(.title)"')
 
     [ -z "$labels" ] && exit 0
@@ -36,9 +40,6 @@ pull() {
     local addr="${MAP_ADDR[$sel]:-}"
     local origin_ws="${MAP_WS[$sel]:-}"
     [ -z "$addr" ] && exit 0
-
-    local cur_ws
-    cur_ws=$(hyprctl activeworkspace -j | jq '.id')
 
     # Herkunft inkl. Float-State + Geometry sichern
     local meta

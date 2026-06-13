@@ -163,6 +163,8 @@ A hidden workspace you can summon and dismiss at any time — great for a persis
 
 | Shortcut | Action |
 |---|---|
+| `Print` | Screenshot whole screen → `~/Pictures/Screenshots/` |
+| `SUPER` + `Print` | Select an area, annotate with `satty`, copy to clipboard + save |
 | `SUPER` + `SHIFT` + `B` | Reload Waybar (`~/.config/waybar/launch.sh`) |
 
 ---

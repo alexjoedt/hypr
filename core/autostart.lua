@@ -12,6 +12,7 @@ function M.setup()
         hl.exec_cmd("hyprpaper")
         hl.exec_cmd("qs")
         hl.exec_cmd("hyprctl reload -q")
+        hl.exec_cmd("hypridle -q")
         hl.exec_cmd("systemctl --user retart elephant")
     end)
 end

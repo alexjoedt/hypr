@@ -44,6 +44,9 @@ pull() {
 
     hyprctl dispatch "hl.dsp.window.move({ workspace = ${cur_ws}, window = 'address:${addr}', follow = false })"
     hyprctl dispatch "hl.dsp.focus({ window = 'address:${addr}' })"
+    # Make it floating and center it on the current workspace
+    hyprctl dispatch "hl.dsp.window.float({ action = 'enable', window = 'address:${addr}' })"
+    hyprctl dispatch "hl.dsp.window.center({ window = 'address:${addr}' })"
 }
 
 return_window() {
@@ -58,9 +61,12 @@ return_window() {
 
     hyprctl dispatch "hl.dsp.window.move({ workspace = ${origin}, window = 'address:${addr}', follow = false })"
 
-    # Floating-Position wiederherstellen
+    # Floating-State wiederherstellen
     if [ "$was_float" = "true" ]; then
         hyprctl dispatch "hl.dsp.window.move({ x = ${at_x}, y = ${at_y}, window = 'address:${addr}' })"
+    else
+        # Was tiled before — remove floating
+        hyprctl dispatch "hl.dsp.window.float({ action = 'disable', window = 'address:${addr}' })"
     fi
 
     rm -f "$STATE"

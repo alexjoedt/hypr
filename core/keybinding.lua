@@ -33,11 +33,13 @@ function M.setup(opts)
         hl.dispatch(hl.dsp.window.float({ action = "toggle" }))
         hl.dispatch(hl.dsp.window.pin())
     end)
+    hl.bind(mainMod .. " + F",         require("core.focus").toggle) -- focus mode: center 1-2 windows
     hl.bind(mainMod .. " + Space",     hl.dsp.exec_cmd(menu))
     hl.bind(mainMod .. " + P",         hl.dsp.window.pseudo()) -- dwindle
     -- hl.bind(mainMod .. " + J",      hl.dsp.layout("togglesplit")) -- dwindle
     hl.bind(mainMod .. " + minus",      hl.dsp.layout("togglesplit")) -- dwindle: toggle vertical/horizontal split
     hl.bind(mainMod .. " + SHIFT + B", hl.dsp.exec_cmd("wayle panel restart"))
+    hl.bind(mainMod .. " + SHIFT + space",     function() hl.plugin.hyprexpo.expo("toggle") end) -- workspace overview
 
     -- Move focus with mainMod + vim keys / arrow keys
     hl.bind(mainMod .. " + H",     hl.dsp.focus({ direction = "left"  }))

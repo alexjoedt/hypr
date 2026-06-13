@@ -41,6 +41,9 @@ function M.setup(opts)
     hl.bind(mainMod .. " + SHIFT + B", hl.dsp.exec_cmd("wayle panel restart"))
     hl.bind(mainMod .. " + SHIFT + space",     function() hl.plugin.hyprexpo.expo("toggle") end) -- workspace overview
 
+    --lock screen
+    hl.bind(mainMod .. " + I", hl.dsp.exec_cmd("hyprlock --quiet --grace 1"))
+    
     -- Move focus with mainMod + vim keys / arrow keys
     hl.bind(mainMod .. " + H",     hl.dsp.focus({ direction = "left"  }))
     hl.bind(mainMod .. " + L",     hl.dsp.focus({ direction = "right" }))

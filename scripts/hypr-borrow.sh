@@ -4,6 +4,15 @@ set -euo pipefail
 
 STATE="$XDG_RUNTIME_DIR/hypr-borrow.json"
 
+# ── Configuration (override via environment) ────────────────────────────────
+# HYPR_BORROW_FLOAT  : float + center the borrowed window  (default: true)
+# HYPR_BORROW_GAP    : top/bottom gap in px when floating  (default: 100)
+# HYPR_BORROW_WIDTH  : width as fraction of monitor width  (default: 0.5)
+: "${HYPR_BORROW_FLOAT:=true}"
+: "${HYPR_BORROW_GAP:=100}"
+: "${HYPR_BORROW_WIDTH:=0.5}"
+# ────────────────────────────────────────────────────────────────────────────
+
 pull() {
     # Fenster einlesen; Label für Anzeige, Daten getrennt halten
     declare -A MAP_ADDR MAP_WS
@@ -44,9 +53,21 @@ pull() {
 
     hyprctl dispatch "hl.dsp.window.move({ workspace = ${cur_ws}, window = 'address:${addr}', follow = false })"
     hyprctl dispatch "hl.dsp.focus({ window = 'address:${addr}' })"
-    # Make it floating and center it on the current workspace
-    hyprctl dispatch "hl.dsp.window.float({ action = 'enable', window = 'address:${addr}' })"
-    hyprctl dispatch "hl.dsp.window.center({ window = 'address:${addr}' })"
+
+    if [ "$HYPR_BORROW_FLOAT" = "true" ]; then
+        # Float, resize, then center — same as Super+T
+        local win_w win_h
+        read -r win_w win_h < <(hyprctl monitors -j | jq -r \
+            --argjson gap  "$HYPR_BORROW_GAP" \
+            --argjson frac "$HYPR_BORROW_WIDTH" '
+            .[] | select(.focused == true) |
+            [ ((.width  / .scale) * $frac | floor),
+              ((.height / .scale) - ($gap * 2) | floor) ] |
+            "\(.[0]) \(.[1])"')
+        hyprctl dispatch "hl.dsp.window.float({ action = 'enable', window = 'address:${addr}' })"
+        hyprctl dispatch "hl.dsp.window.resize({ x = ${win_w}, y = ${win_h}, window = 'address:${addr}' })"
+        hyprctl dispatch "hl.dsp.window.center({ window = 'address:${addr}' })"
+    fi
 }
 
 return_window() {

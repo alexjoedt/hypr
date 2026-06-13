@@ -63,6 +63,18 @@ function M.setup()
     -- Example window rule
     -- hl.window_rule({ match = { class = "kitty", title = "kitty" }, float = true })
     hl.workspace_rule({ workspace = "1", layout = "scrolling" }) -- no gaps on workspace 1
+
+    -- File managers — always float regardless of their default tile hint.
+    -- See https://wiki.hypr.land/Configuring/Basics/Window-Rules/
+    local file_managers = { "thunar", "nautilus", "dolphin", "nemo", "pcmanfm", "spacefm", "caja" }
+    for _, fm in ipairs(file_managers) do
+        hl.window_rule({
+            name  = "float-" .. fm,
+            match = { class = "^[Ii]?(" .. fm .. ")$" },
+            float = true,
+        })
+    end
+
     -- Ignore maximize requests from apps. You'll probably like this.
     -- hl.window_rule({
     --     name  = "suppress-maximize-events",

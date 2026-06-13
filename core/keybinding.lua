@@ -41,7 +41,7 @@ function M.setup(opts)
     hl.bind(mainMod .. " + SHIFT + O",     function() hl.plugin.hyprexpo.expo("toggle") end) -- workspace overview
 
     --lock screen
-    hl.bind(mainMod .. " + I", hl.dsp.exec_cmd("hyprlock --quiet --grace 1"))
+    hl.bind(mainMod .. " + ALT + L", hl.dsp.exec_cmd("hyprlock --quiet --grace 1"))
 
     -- Borrow a window from another workspace / return it (hypr-borrow.sh)
     hl.bind(mainMod .. " + B",         hl.dsp.exec_cmd("~/.config/hypr/scripts/hypr-borrow.sh pull"))

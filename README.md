@@ -28,6 +28,7 @@ The five shortcuts you need to know on day one:
 | `SUPER` + `E` | Open file manager |
 | `SUPER` + `W` | Close active window |
 | `SUPER` + `M` | Exit Hyprland |
+| `SUPER` + `SHIFT` + `/` or `-` (on DE) | Show all keybindings |
 
 ---
 
@@ -165,6 +166,7 @@ A hidden workspace you can summon and dismiss at any time — great for a persis
 |---|---|
 | `Print` | Screenshot whole screen → `~/Pictures/Screenshots/` |
 | `SUPER` + `Print` | Select an area, annotate with `satty`, copy to clipboard + save |
+| `SUPER` + `/` | Open interactive keybindings cheatsheet (walker) |
 
 ---
 

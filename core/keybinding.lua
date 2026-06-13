@@ -59,6 +59,13 @@ function M.setup(opts)
     hl.bind(mainMod .. " + Print", hl.dsp.exec_cmd('mkdir -p ~/Pictures/Screenshots && grim -g "$(slurp)" - | satty -f - --copy-command wl-copy -o ~/Pictures/Screenshots/%Y%m%d_%H%M%S.png'),
                                                                        { description = "Screenshot (select area + annotate)" })
 
+    -- Walker launcher (elephant window provider)
+    hl.bind(mainMod .. " + SHIFT + W", hl.dsp.exec_cmd("walker --provider windows"),
+                                                                       { description = "Walker (windows)"       })
+
+    hl.bind(mainMod .. " + V", hl.dsp.exec_cmd("walker --provider clipboard"),
+                                                                        { description = "Walker (calculator)"       })
+
     -- Keybindings cheatsheet
     hl.bind(mainMod .. " + SHIFT + minus",     hl.dsp.exec_cmd("~/.config/hypr/scripts/hypr-keybindings.sh"),
                                                                        { description = "Show keybindings"       })

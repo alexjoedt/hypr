@@ -74,6 +74,8 @@ pull() {
 return_window() {
     [ -f "$STATE" ] || { notify-send "hypr-borrow" "Kein geliehenes Fenster"; exit 0; }
 
+    trap 'rm -f "$STATE"' RETURN
+
     local addr origin was_float at_x at_y
     addr=$(jq -r '.address' "$STATE")
     origin=$(jq -r '.origin' "$STATE")
@@ -90,8 +92,6 @@ return_window() {
         # Was tiled before — remove floating
         hyprctl dispatch "hl.dsp.window.float({ action = 'disable', window = 'address:${addr}' })"
     fi
-
-    rm -f "$STATE"
 }
 
 case "${1:-}" in

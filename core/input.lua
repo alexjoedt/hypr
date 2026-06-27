@@ -4,10 +4,11 @@ function M.setup()
 	-- https://wiki.hypr.land/Configuring/Basics/Variables/#input
 	hl.config({
 		input = {
-			kb_layout = "eu",
-			kb_variant = "",
-			kb_model = "",
-			kb_options = "",
+			-- kb_layout = "",
+			kb_file = "~/.config/hypr/eurkey_qwertz.xkb",
+			-- kb_variant = "",
+			-- kb_model = "",
+			-- kb_options = "",
 			kb_rules = "",
 
 			follow_mouse = 1,

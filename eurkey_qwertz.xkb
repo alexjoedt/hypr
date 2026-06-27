@@ -1296,7 +1296,7 @@ xkb_symbols "pc+eu+inet(evdev)" {
     };
     key <AD06> {
         type= "FOUR_LEVEL_ALPHABETIC",
-        symbols[Group1]= [               y,               Y,      ydiaeresis,      Ydiaeresis ]
+        symbols[Group1]= [               z,               Z,          agrave,          Agrave ]
     };
     key <AD07> {
         type= "FOUR_LEVEL_ALPHABETIC",
@@ -1379,7 +1379,7 @@ xkb_symbols "pc+eu+inet(evdev)" {
     };
     key <AB01> {
         type= "FOUR_LEVEL_ALPHABETIC",
-        symbols[Group1]= [               z,               Z,          agrave,          Agrave ]
+        symbols[Group1]= [               y,               Y,      ydiaeresis,      Ydiaeresis ]
     };
     key <AB02> {
         type= "FOUR_LEVEL_ALPHABETIC",

@@ -5,11 +5,11 @@ function M.setup()
 	hl.config({
 		input = {
 			-- kb_layout = "",
-			kb_file = "~/.config/hypr/eurkey_qwertz.xkb",
+			kb_file = "/home/alex/.config/hypr/eurkey_qwertz.xkb",
 			-- kb_variant = "",
 			-- kb_model = "",
 			-- kb_options = "",
-			kb_rules = "",
+			-- kb_rules = "",
 
 			follow_mouse = 1,
 

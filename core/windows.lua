@@ -13,88 +13,91 @@ local M = {}
 -- See https://wiki.hypr.land/Configuring/Basics/Workspace-Rules/#workspace-selectors
 
 local function single_window_gaps(m)
-    -- Logical width accounts for HiDPI: a 4K screen scaled ×2 behaves like 1920px.
-    local lw = m.width / (m.scale or 1)
+	-- Logical width accounts for HiDPI: a 4K screen scaled ×2 behaves like 1920px.
+	local lw = m.width / (m.scale or 1)
 
-    if lw > 2560 then
-        -- Ultrawide (≥21:9) or large 4K — push the window into a centred column.
-        -- 13 % of logical width per side keeps the window at ~74 % of the screen.
-        -- Raise the multiplier (e.g. 0.18) for an even narrower column.
-        local h_gap = math.floor(lw * 0.23)
-        return { top = 20, right = h_gap, bottom = 20, left = h_gap }
-    elseif lw > 1920 then
-        -- 1440p / QHD
-        return { top = 20, right = 200, bottom = 20, left = 200 }
-    else
-        -- Laptop / 1080p — minimal padding
-        return { top = 20, right = 20, bottom = 20, left = 20 }
-    end
+	if lw > 2560 then
+		-- Ultrawide (≥21:9) or large 4K — push the window into a centred column.
+		-- 13 % of logical width per side keeps the window at ~74 % of the screen.
+		-- Raise the multiplier (e.g. 0.18) for an even narrower column.
+		local h_gap = math.floor(lw * 0.23)
+		return { top = 20, right = h_gap, bottom = 20, left = h_gap }
+	elseif lw > 1920 then
+		-- 1440p / QHD
+		return { top = 20, right = 200, bottom = 20, left = 200 }
+	else
+		-- Laptop / 1080p — minimal padding
+		return { top = 20, right = 20, bottom = 20, left = 20 }
+	end
 end
 
 local function register_centering_rule(m)
-    hl.workspace_rule({
-        workspace = "w[t1]m[" .. m.name .. "]",
-        gaps_out  = single_window_gaps(m),
-    })
+	hl.workspace_rule({
+		workspace = "w[t1]m[" .. m.name .. "]",
+		gaps_out = single_window_gaps(m),
+	})
 end
 
 function M.setup()
-    -- See https://wiki.hypr.land/Configuring/Basics/Window-Rules/ for more
-    -- See https://wiki.hypr.land/Configuring/Basics/Workspace-Rules/ for workspace rules
+	-- See https://wiki.hypr.land/Configuring/Basics/Window-Rules/ for more
+	-- See https://wiki.hypr.land/Configuring/Basics/Workspace-Rules/ for workspace rules
 
-    -- Register rules at config-parse time so they survive config reloads.
-    -- hl.get_monitors() is available here because DRM/KMS initialises monitors
-    -- before the Lua config is evaluated.  On the very first boot, the list may
-    -- be empty; the hyprland.start fallback covers that edge case.
-    for _, m in ipairs(hl.get_monitors()) do
-        register_centering_rule(m)
-    end
+	-- Register rules at config-parse time so they survive config reloads.
+	-- hl.get_monitors() is available here because DRM/KMS initialises monitors
+	-- before the Lua config is evaluated.  On the very first boot, the list may
+	-- be empty; the hyprland.start fallback covers that edge case.
+	for _, m in ipairs(hl.get_monitors()) do
+		register_centering_rule(m)
+	end
 
-    -- Fallback: first boot where monitors may not yet be available above.
-    hl.on("hyprland.start", function()
-        for _, m in ipairs(hl.get_monitors()) do
-            register_centering_rule(m)
-        end
-    end)
+	-- Fallback: first boot where monitors may not yet be available above.
+	hl.on("hyprland.start", function()
+		for _, m in ipairs(hl.get_monitors()) do
+			register_centering_rule(m)
+		end
+	end)
 
-    -- Hot-plug: register a rule whenever a new display is connected.
-    hl.on("monitor.added", register_centering_rule)
+	-- Hot-plug: register a rule whenever a new display is connected.
+	hl.on("monitor.added", register_centering_rule)
 
-    -- Example window rule
-    -- hl.window_rule({ match = { class = "kitty", title = "kitty" }, float = true })
-    hl.workspace_rule({ workspace = "1", layout = "scrolling" }) -- no gaps on workspace 1
+	-- Example window rule
+	-- hl.window_rule({ match = { class = "kitty", title = "kitty" }, float = true })
+	hl.workspace_rule({ workspace = "1", layout = "scrolling" }) -- no gaps on workspace 1
 
-    -- File managers — always float regardless of their default tile hint.
-    -- See https://wiki.hypr.land/Configuring/Basics/Window-Rules/
-    local file_managers = { "thunar", "nautilus", "dolphin", "nemo", "pcmanfm", "spacefm", "caja" }
-    for _, fm in ipairs(file_managers) do
-        hl.window_rule({
-            name  = "float-" .. fm,
-            match = { class = "^[Ii]?(" .. fm .. ")$" },
-            float = true,
-        })
-    end
+	-- WezTerm — enable blur behind the transparent window.
+	hl.layer_rule({ match = { namespace = "^(org.wezfurlong.wezterm|wezterm.*)$" }, blur = true })
 
-    -- Ignore maximize requests from apps. You'll probably like this.
-    -- hl.window_rule({
-    --     name  = "suppress-maximize-events",
-    --     match = { class = ".*" },
-    --     suppress_event = "maximize",
-    -- })
+	-- File managers — always float regardless of their default tile hint.
+	-- See https://wiki.hypr.land/Configuring/Basics/Window-Rules/
+	local file_managers = { "thunar", "nautilus", "dolphin", "nemo", "pcmanfm", "spacefm", "caja" }
+	for _, fm in ipairs(file_managers) do
+		hl.window_rule({
+			name = "float-" .. fm,
+			match = { class = "^[Ii]?(" .. fm .. ")$" },
+			float = true,
+		})
+	end
 
-    -- Fix some dragging issues with XWayland
-    -- hl.window_rule({
-    --     name  = "fix-xwayland-drags",
-    --     match = {
-    --         class      = "^$",
-    --         title      = "^$",
-    --         xwayland   = true,
-    --         float      = true,
-    --         fullscreen = false,
-    --         pin        = false,
-    --     },
-    --     no_focus = true,
-    -- })
+	-- Ignore maximize requests from apps. You'll probably like this.
+	-- hl.window_rule({
+	--     name  = "suppress-maximize-events",
+	--     match = { class = ".*" },
+	--     suppress_event = "maximize",
+	-- })
+
+	-- Fix some dragging issues with XWayland
+	-- hl.window_rule({
+	--     name  = "fix-xwayland-drags",
+	--     match = {
+	--         class      = "^$",
+	--         title      = "^$",
+	--         xwayland   = true,
+	--         float      = true,
+	--         fullscreen = false,
+	--         pin        = false,
+	--     },
+	--     no_focus = true,
+	-- })
 end
 
 return M

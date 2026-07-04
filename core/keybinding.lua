@@ -123,21 +123,27 @@ function M.setup(opts)
     hl.bind(mainMod .. " + mouse:272", hl.dsp.window.drag(),   { mouse = true, description = "Move window (drag)"   })
     hl.bind(mainMod .. " + mouse:273", hl.dsp.window.resize(), { mouse = true, description = "Resize window (drag)" })
 
-    -- Resize mode: SUPER + R to enter, arrow/vim keys to resize, ESC to exit
-    -- See https://wiki.hypr.land/Configuring/Basics/Binds/#submaps
-    hl.bind(mainMod .. " + R", hl.dsp.submap("resize"), { description = "Enter resize mode" })
+    -- Cycle window size: SUPER + R → ½ → ⅓ → ¼ → ½ …
+    -- Resizes the active window in-place (tiled or floating) without changing its floating state.
+    local _cycle_sizes = { 1/2, 1/3, 1/4 }
+    local _cycle_state = {}  -- [window_address] = current_index
 
-    hl.define_submap("resize", function()
-        hl.bind("right", hl.dsp.window.resize({ x = 20,  y = 0,   relative = true }), { repeating = true, description = "Expand right"    })
-        hl.bind("left",  hl.dsp.window.resize({ x = -20, y = 0,   relative = true }), { repeating = true, description = "Shrink left"     })
-        hl.bind("up",    hl.dsp.window.resize({ x = 0,   y = -20, relative = true }), { repeating = true, description = "Shrink up"       })
-        hl.bind("down",  hl.dsp.window.resize({ x = 0,   y = 20,  relative = true }), { repeating = true, description = "Expand down"     })
-        hl.bind("L",     hl.dsp.window.resize({ x = 20,  y = 0,   relative = true }), { repeating = true, description = "Expand right"    })
-        hl.bind("H",     hl.dsp.window.resize({ x = -20, y = 0,   relative = true }), { repeating = true, description = "Shrink left"     })
-        hl.bind("K",     hl.dsp.window.resize({ x = 0,   y = -20, relative = true }), { repeating = true, description = "Shrink up"       })
-        hl.bind("J",     hl.dsp.window.resize({ x = 0,   y = 20,  relative = true }), { repeating = true, description = "Expand down"     })
-        hl.bind("escape", hl.dsp.submap("reset"),                                      {                   description = "Exit resize mode" })
-    end)
+    hl.bind(mainMod .. " + R", function()
+        local win = hl.get_active_window()
+        if not win then return end
+
+        local mon = hl.get_active_monitor()
+        if not mon then return end
+
+        local addr = win.address
+        local idx  = (_cycle_state[addr] or 0) % #_cycle_sizes + 1
+        _cycle_state[addr] = idx
+
+        local gap = 100
+        local w   = math.floor(mon.width  / mon.scale * _cycle_sizes[idx])
+        local h   = math.floor(mon.height / mon.scale - 2 * gap)
+        hl.dispatch(hl.dsp.window.resize({ x = w, y = h }))
+    end, { description = "Cycle window size (½ → ⅓ → ¼)" })
 
     -- Laptop multimedia keys for volume and LCD brightness
     hl.bind("XF86AudioRaiseVolume",  hl.dsp.exec_cmd("wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+"), { locked = true, repeating = true, description = "Volume up"       })

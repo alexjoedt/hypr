@@ -69,18 +69,15 @@ Toggle how a window behaves in the layout.
 | `SUPER` + Left mouse drag | Move floating window |
 | `SUPER` + Right mouse drag | Resize window |
 
-### Resize Mode
+### Cycle Window Size
 
-Press `SUPER` + `R` to enter resize mode, then use vim-style or arrow keys to resize the active window. Works for both tiled and floating windows. Press `Escape` to exit.
+Press `SUPER` + `R` to pull a tiled (or floating) window out into a centered floating window and cycle through preset widths. Useful for quickly popping a tiled window into a usable floating size without touching the mouse.
 
 | Shortcut | Action |
 |---|---|
-| `SUPER` + `R` | Enter resize mode |
-| `H` or `←` | Shrink horizontally |
-| `L` or `→` | Grow horizontally |
-| `K` or `↑` | Shrink vertically |
-| `J` or `↓` | Grow vertically |
-| `Escape` | Exit resize mode |
+| `SUPER` + `R` | Cycle size: ½ → ⅓ → ¼ monitor width (full height) |
+
+Each press floats the window (if not already), resizes it, and re-centers it. The cycle is per-window and wraps back to ½ after ¼.
 
 ### Groups (Tabbed Windows)
 

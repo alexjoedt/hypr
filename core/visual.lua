@@ -24,6 +24,17 @@ function M.setup()
             allow_tearing = false,
 
             layout = "dwindle",
+
+            snap = {
+                enabled = true,
+            }
+        },
+
+        dwindle = {
+            preserve_split = true,
+            smart_split = true,
+            smart_resizing = true,
+            --split_bias = 1,
         },
 
         -- https://wiki.hypr.land/Configuring/Basics/Variables/#decoration

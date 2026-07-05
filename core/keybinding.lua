@@ -66,8 +66,8 @@ function M.setup(opts)
     hl.bind(mainMod .. " + V", hl.dsp.exec_cmd("walker --provider clipboard"),
                                                                         { description = "Walker (calculator)"       })
 
-    -- Launch numbr with Super+Shift+C
-    hl.bind(mainMod .. " + SHIFT + C", hl.dsp.exec_cmd("numbr"),
+    -- Launch numbr with Super+Shift+N
+    hl.bind(mainMod .. " + SHIFT + N", hl.dsp.exec_cmd("numbr"),
                                                                        { description = "Calculator"               })
 
     -- Keybindings cheatsheet

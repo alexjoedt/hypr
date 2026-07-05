@@ -77,7 +77,13 @@ function M.setup()
 			float = true,
 		})
 	end
-
+	-- numbr calculator — float, centre, and set a fixed size
+	hl.window_rule({
+		match  = { class = "^(numbr)$" },
+		float  = true,
+		size   = { 680, 520 },
+		center = true,
+	})
 	-- Ignore maximize requests from apps. You'll probably like this.
 	-- hl.window_rule({
 	--     name  = "suppress-maximize-events",

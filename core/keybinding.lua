@@ -66,6 +66,10 @@ function M.setup(opts)
     hl.bind(mainMod .. " + V", hl.dsp.exec_cmd("walker --provider clipboard"),
                                                                         { description = "Walker (calculator)"       })
 
+    -- Launch numbr with Super+Shift+C
+    hl.bind(mainMod .. " + SHIFT + C", hl.dsp.exec_cmd("numbr"),
+                                                                       { description = "Calculator"               })
+
     -- Keybindings cheatsheet
     hl.bind(mainMod .. " + SHIFT + minus",     hl.dsp.exec_cmd("~/.config/hypr/scripts/hypr-keybindings.sh"),
                                                                        { description = "Show keybindings"       })
@@ -90,7 +94,7 @@ function M.setup(opts)
     hl.bind(mainMod .. " + SHIFT + up",    hl.dsp.window.swap({ direction = "up"    }), { description = "Swap window up"    })
     hl.bind(mainMod .. " + SHIFT + down",  hl.dsp.window.swap({ direction = "down"  }), { description = "Swap window down"  })
 
-    -- Alt + Tab: cycle windows across all workspaces in MRU order.
+        -- Alt + Tab: cycle windows across all workspaces in MRU order.
     --
     -- _mru   : list of window addresses ordered by last focus time,
     --          _mru[1] = oldest, _mru[#_mru] = current.

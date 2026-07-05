@@ -90,6 +90,16 @@ function M.setup(opts)
     hl.bind(mainMod .. " + SHIFT + up",    hl.dsp.window.swap({ direction = "up"    }), { description = "Swap window up"    })
     hl.bind(mainMod .. " + SHIFT + down",  hl.dsp.window.swap({ direction = "down"  }), { description = "Swap window down"  })
 
+    -- Alt + Tab: cycle through windows on the current workspace
+    hl.bind("ALT + Tab", function()
+        hl.dispatch(hl.dsp.window.cycle_next())
+        hl.dispatch(hl.dsp.window.bring_to_top())
+    end, { description = "Alt+Tab: next window" })
+    hl.bind("ALT + SHIFT + Tab", function()
+        hl.dispatch(hl.dsp.window.cycle_next({ next = false }))
+        hl.dispatch(hl.dsp.window.bring_to_top())
+    end, { description = "Alt+Tab: previous window" })
+
     -- Groups (tabbed windows)
     hl.bind(mainMod .. " + G",           hl.dsp.group.toggle(),      { description = "Toggle window group"   }) -- create / dissolve group
     hl.bind(mainMod .. " + SHIFT + G",   hl.dsp.group.lock_active(), { description = "Lock window group"     }) -- lock group (no auto-join)

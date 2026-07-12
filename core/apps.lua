@@ -5,6 +5,12 @@ local defaultApps = {
         cmd = "firefox",
         class = "firefox",
     },
+
+    zed = {
+        cmd = "/home/alex/.local/bin/zed",
+        class = "zed",
+        classPattern = "[Zz][Ee][Dd]",
+    }
 }
 
 local state = {
@@ -118,6 +124,8 @@ function M.setup(opts)
 
     -- Example: startOrFocus("firefox", 3, "f")
     M.startOrFocus("firefox", 3, "f")
+    M.startOrFocus("zed", 2, "z")
+    M.startOrFocus("zed", 2, "y")
 end
 
 return M

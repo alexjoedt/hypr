@@ -56,11 +56,17 @@ require("core.windows").setup()
 -------------------
 
 -- See https://wiki.hypr.land/Configuring/Basics/Binds/
+local mainMod = "SUPER"
+
 require("core.keybinding").setup({
     terminal = programs.terminal,
     fileManager = programs.fileManager,
     menu = programs.menu,
-    mainMod = "SUPER", -- Sets "Windows" key as main modifier
+    mainMod = mainMod, -- Sets "Windows" key as main modifier
+})
+
+require("core.apps").setup({
+    mainMod = mainMod,
 })
 
 -----------------

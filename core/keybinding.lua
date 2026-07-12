@@ -33,7 +33,7 @@ function M.setup(opts)
         hl.dispatch(hl.dsp.window.float({ action = "toggle" }))
         hl.dispatch(hl.dsp.window.pin())
     end, { description = "Pop out (float + pin)" })
-    hl.bind(mainMod .. " + F",         require("core.focus").toggle,  { description = "Focus mode"             }) -- focus mode: center 1-2 windows
+    hl.bind(mainMod .. " + SHIFT + F", require("core.focus").toggle,  { description = "Focus mode"             }) -- focus mode: center 1-2 windows
     hl.bind(mainMod .. " + Space",     hl.dsp.exec_cmd(menu),         { description = "App launcher"           })
     --hl.bind(mainMod .. " + P",         hl.dsp.window.pseudo(),        { description = "Toggle pseudo-tile"     }) -- dwindle
     -- hl.bind(mainMod .. " + J",      hl.dsp.layout("togglesplit")) -- dwindle

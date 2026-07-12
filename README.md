@@ -25,6 +25,7 @@ The five shortcuts you need to know on day one:
 |---|---|
 | `SUPER` + `Return` | Open terminal |
 | `SUPER` + `Space` | Open app launcher |
+| `SUPER` + `F` | Start or focus Firefox on workspace 3 |
 | `SUPER` + `E` | Open file manager |
 | `SUPER` + `W` | Close active window |
 | `SUPER` + `M` | Exit Hyprland |
@@ -63,6 +64,7 @@ Toggle how a window behaves in the layout.
 | Shortcut | Action |
 |---|---|
 | `SUPER` + `T` | Toggle floating |
+| `SUPER` + `SHIFT` + `F` | Toggle Focus mode (centered layout) |
 | `SUPER` + `O` | Pop out — floating + sticky (follows you across all workspaces) |
 | `SUPER` + `P` | Toggle pseudo-tiling (dwindle) |
 | `SUPER` + `-` | Toggle split direction (vertical ↔ horizontal) for dwindle |

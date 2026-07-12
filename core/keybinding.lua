@@ -13,7 +13,7 @@ function M.setup(opts)
     hl.bind(mainMod .. " + W",         hl.dsp.window.close(),        { description = "Close window"  })
     hl.bind(mainMod .. " + M",         hl.dsp.exit(),                { description = "Exit Hyprland" })
     hl.bind(mainMod .. " + E",         hl.dsp.exec_cmd(fileManager), { description = "File manager"  })
-    hl.bind(mainMod .. " + T",         function() -- toggle float: center + resize with 100px top/bottom gap
+    hl.bind(mainMod .. " + P",         function() -- toggle float: center + resize with 100px top/bottom gap
         local win        = hl.get_active_window()
         local is_floating = win and win.floating  -- snapshot BEFORE dispatch (proxy tables eval lazily)
         hl.dispatch(hl.dsp.window.float({ action = "toggle" }))
@@ -35,7 +35,7 @@ function M.setup(opts)
     end, { description = "Pop out (float + pin)" })
     hl.bind(mainMod .. " + F",         require("core.focus").toggle,  { description = "Focus mode"             }) -- focus mode: center 1-2 windows
     hl.bind(mainMod .. " + Space",     hl.dsp.exec_cmd(menu),         { description = "App launcher"           })
-    hl.bind(mainMod .. " + P",         hl.dsp.window.pseudo(),        { description = "Toggle pseudo-tile"     }) -- dwindle
+    --hl.bind(mainMod .. " + P",         hl.dsp.window.pseudo(),        { description = "Toggle pseudo-tile"     }) -- dwindle
     -- hl.bind(mainMod .. " + J",      hl.dsp.layout("togglesplit")) -- dwindle
     hl.bind(mainMod .. " + minus",     hl.dsp.layout("togglesplit"),  { description = "Toggle split direction" }) -- dwindle: toggle vertical/horizontal split
     hl.bind(mainMod .. " + SHIFT + O", function() hl.plugin.hyprexpo.expo("toggle") end,
@@ -73,7 +73,7 @@ function M.setup(opts)
     -- Keybindings cheatsheet
     hl.bind(mainMod .. " + SHIFT + minus",     hl.dsp.exec_cmd("~/.config/hypr/scripts/hypr-keybindings.sh"),
                                                                        { description = "Show keybindings"       })
-    
+
     -- Move focus with mainMod + vim keys / arrow keys
     hl.bind(mainMod .. " + H",     hl.dsp.focus({ direction = "left"  }), { description = "Focus left"  })
     hl.bind(mainMod .. " + L",     hl.dsp.focus({ direction = "right" }), { description = "Focus right" })

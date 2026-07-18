@@ -15,7 +15,7 @@
 --     required so a solo column can actually shrink).
 local M = {}
 
-local _sizes = { 3/4, 2/3, 1/2, 1/3, 1/4 }
+local _sizes = { 1, 0.75, 0.67, 0.5, 0.33, 0.25 }
 local _state = {}  -- [window_address] = current_index
 
 -- Count tiled (non-floating) windows on the given workspace name.
@@ -58,7 +58,7 @@ function M.cycle()
     local layout = ws and ws.tiled_layout or "dwindle"
 
     if layout == "scrolling" then
-        if size == "reset" then
+        if size == 1 then
             hl.dispatch(hl.dsp.layout("colresize 1.0"))
         else
             hl.dispatch(hl.dsp.layout("colresize " .. size))
@@ -70,7 +70,7 @@ function M.cycle()
         -- Solo tiled window: no sibling to resize against, so emulate
         -- the target width via the workspace's gaps_out instead.
         local base = require("core.windows").single_window_gaps(mon)
-        if size == "reset" then
+        if size == 1 then
             hl.workspace_rule({ workspace = ws.name, gaps_out = base })
         else
             local target_w = math.floor(mon.width / mon.scale * size)
@@ -81,6 +81,9 @@ function M.cycle()
             })
         end
     else
+        if size == 1 then
+            return
+        end
         local w = math.floor(mon.width / mon.scale * size)
         hl.dispatch(hl.dsp.window.resize({ x = w, y = h }))
     end

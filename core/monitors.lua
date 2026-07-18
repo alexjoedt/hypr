@@ -39,7 +39,7 @@ end
 -- testing live: the screen stayed off until `disabled = false` was passed
 -- alongside mode/position/scale).
 local function enable_edp1()
-	hl.monitor({ output = "eDP-1", disabled = false, mode = "preferred", position = "auto", scale = 1 })
+	hl.monitor({ output = "eDP-1", disabled = false, mode = "preferred", position = "auto", scale = "auto" })
 end
 
 local function disable_edp1(migrate_to)

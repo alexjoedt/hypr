@@ -13,26 +13,8 @@ function M.setup(opts)
     hl.bind(mainMod .. " + W",         hl.dsp.window.close(),        { description = "Close window"  })
     hl.bind(mainMod .. " + M",         hl.dsp.exit(),                { description = "Exit Hyprland" })
     hl.bind(mainMod .. " + E",         hl.dsp.exec_cmd(fileManager), { description = "File manager"  })
-    hl.bind(mainMod .. " + P",         function() -- toggle float: center + resize with 100px top/bottom gap
-        local win        = hl.get_active_window()
-        local is_floating = win and win.floating  -- snapshot BEFORE dispatch (proxy tables eval lazily)
-        hl.dispatch(hl.dsp.window.float({ action = "toggle" }))
-        -- only resize/center when going tiled → floating (handle both boolean false and integer 0)
-        if win and is_floating ~= true and is_floating ~= 1 then
-            local gap = 100
-            local mon = hl.get_active_monitor()
-            if mon then
-                local w = math.floor(mon.width  / mon.scale * 0.5)
-                local h = math.floor(mon.height / mon.scale - 2 * gap)
-                hl.dispatch(hl.dsp.window.resize({ x = w, y = h }))
-            end
-            hl.dispatch(hl.dsp.window.center({}))
-        end
-    end, { description = "Toggle float (centered)" })
-    hl.bind(mainMod .. " + O",         function() -- pop out: float + pin (follows across workspaces)
-        hl.dispatch(hl.dsp.window.float({ action = "toggle" }))
-        hl.dispatch(hl.dsp.window.pin())
-    end, { description = "Pop out (float + pin)" })
+    hl.bind(mainMod .. " + P", require("core.float").toggle_centered, { description = "Toggle float (centered)" })
+    hl.bind(mainMod .. " + O", require("core.float").popout,          { description = "Pop out (float + pin)" })
     hl.bind(mainMod .. " + SHIFT + F", require("core.focus").toggle,  { description = "Focus mode"             }) -- focus mode: center 1-2 windows
     hl.bind(mainMod .. " + Space",     hl.dsp.exec_cmd(menu),         { description = "App launcher"           })
     --hl.bind(mainMod .. " + P",         hl.dsp.window.pseudo(),        { description = "Toggle pseudo-tile"     }) -- dwindle
@@ -98,71 +80,10 @@ function M.setup(opts)
     hl.bind(mainMod .. " + SHIFT + up",    hl.dsp.window.swap({ direction = "up"    }), { description = "Swap window up"    })
     hl.bind(mainMod .. " + SHIFT + down",  hl.dsp.window.swap({ direction = "down"  }), { description = "Swap window down"  })
 
-        -- Alt + Tab: cycle windows across all workspaces in MRU order.
-    --
-    -- _mru   : list of window addresses ordered by last focus time,
-    --          _mru[1] = oldest, _mru[#_mru] = current.
-    -- _atidx : index into _mru while cycling; nil = not currently cycling.
-    -- _atskip: address of the window we just focused ourselves so the
-    --          window.active event doesn't reset _atidx mid-cycle.
-    local _mru   = {}
-    local _atidx = nil
-    local _atskip = nil
-
-    hl.on("window.active", function(w)
-        if _atskip == w.address then
-            -- This focus was triggered by our own cycling dispatch; ignore.
-            _atskip = nil
-            return
-        end
-        -- Any manual focus resets the cycling position.
-        _atidx = nil
-        -- Move this window to the end of the MRU list (most recent).
-        for i = #_mru, 1, -1 do
-            if _mru[i] == w.address then table.remove(_mru, i) end
-        end
-        table.insert(_mru, w.address)
-    end)
-
-    local function _alt_tab(direction)
-        -- Build a lookup of currently open windows.
-        local valid = {}
-        for _, w in ipairs(hl.get_windows()) do valid[w.address] = w end
-
-        -- Prune any closed windows from the MRU list.
-        local clean = {}
-        for _, addr in ipairs(_mru) do
-            if valid[addr] then table.insert(clean, addr) end
-        end
-        _mru = clean
-
-        if #_mru == 0 then return end
-
-        -- First keypress: start at second-to-last entry (previous window).
-        -- Subsequent keypresses: continue in the chosen direction.
-        if _atidx == nil then
-            _atidx = #_mru - 1
-        else
-            _atidx = _atidx + direction
-        end
-
-        -- Wrap around the list.
-        if _atidx < 1     then _atidx = #_mru end
-        if _atidx > #_mru then _atidx = 1     end
-
-        local addr = _mru[_atidx]
-        local win  = valid[addr]
-        if not win then return end
-
-        -- Mark this address so window.active doesn't clear _atidx.
-        _atskip = addr
-        -- focuswindow with address: prefix switches workspace automatically.
-        hl.dispatch(hl.dsp.focus({ window = "address:" .. addr }))
-        hl.dispatch(hl.dsp.window.bring_to_top())
-    end
-
-    hl.bind("ALT + Tab",         function() _alt_tab(-1) end, { description = "Alt+Tab: previous window (global MRU)" })
-    hl.bind("ALT + SHIFT + Tab", function() _alt_tab( 1) end, { description = "Alt+Tab: next window (global MRU)"     })
+    -- Alt + Tab: cycle windows across all workspaces in MRU order (core/alttab.lua)
+    require("core.alttab").setup()
+    hl.bind("ALT + Tab",         require("core.alttab").prev, { description = "Alt+Tab: previous window (global MRU)" })
+    hl.bind("ALT + SHIFT + Tab", require("core.alttab").next, { description = "Alt+Tab: next window (global MRU)"     })
 
     -- Groups (tabbed windows)
     hl.bind(mainMod .. " + G",           hl.dsp.group.toggle(),      { description = "Toggle window group"   }) -- create / dissolve group
@@ -197,91 +118,9 @@ function M.setup(opts)
     hl.bind(mainMod .. " + mouse:272", hl.dsp.window.drag(),   { mouse = true, description = "Move window (drag)"   })
     hl.bind(mainMod .. " + mouse:273", hl.dsp.window.resize(), { mouse = true, description = "Resize window (drag)" })
 
-    -- Cycle window size: SUPER + R → ¾ → ⅔ → ½ → ⅓ → ¼ → reset (full tile) → ¾ …
-    -- Resizes the active window in-place without changing its floating state.
-    --
-    -- Tiled windows need layout-specific handling:
-    --   - dwindle: a plain resize adjusts the split ratio with the sibling
-    --     node, so other windows resize to fill the freed/reclaimed space
-    --     (default dwindle behavior). But when the window is alone on its
-    --     workspace there's no sibling split to resize against at all, so a
-    --     plain resize is a total no-op — we emulate the size instead via
-    --     the workspace's gaps_out (same trick core/windows.lua already
-    --     uses for auto-centering a lone window).
-    --   - scrolling: use the layout's own colresize message, which sets an
-    --     exact column width fraction directly (see also
-    --     scrolling.fullscreen_on_one_column = false in core/visual.lua,
-    --     required so a solo column can actually shrink).
-    local _cycle_sizes = { 3/4, 2/3, 1/2, 1/3, 1/4, "reset" }
-    local _cycle_state = {}  -- [window_address] = current_index
-
-    -- Count tiled (non-floating) windows on the given workspace name.
-    local function _tiled_count(ws_name)
-        if not ws_name then return 2 end -- unknown → assume non-solo, safest default
-        local n = 0
-        for _, w in ipairs(hl.get_windows()) do
-            local ok, wname = pcall(function() return w.workspace.name end)
-            if ok and wname == ws_name and not w.floating then
-                n = n + 1
-            end
-        end
-        return n
-    end
-
-    hl.bind(mainMod .. " + R", function()
-        local win = hl.get_active_window()
-        if not win then return end
-
-        local mon = hl.get_active_monitor()
-        if not mon then return end
-
-        local addr = win.address
-        local idx  = (_cycle_state[addr] or 0) % #_cycle_sizes + 1
-        _cycle_state[addr] = idx
-        local size = _cycle_sizes[idx]
-
-        -- Width-only toggle: keep the window's current height untouched.
-        local h = win.size and win.size.y or math.floor(mon.height / mon.scale)
-
-        if win.floating then
-           -- if size == "reset" then return end -- no-op, next press continues the cycle
-            local w = math.floor(mon.width / mon.scale * size)
-            hl.dispatch(hl.dsp.window.resize({ x = w, y = h }))
-            hl.dispatch(hl.dsp.window.center({}))
-            return
-        end
-
-        local ws     = hl.get_active_workspace()
-        local layout = ws and ws.tiled_layout or "dwindle"
-
-        if layout == "scrolling" then
-            if size == "reset" then
-                hl.dispatch(hl.dsp.layout("colresize 1.0"))
-            else
-                hl.dispatch(hl.dsp.layout("colresize " .. size))
-            end
-            return
-        end
-
-        if ws and _tiled_count(ws.name) <= 1 then
-            -- Solo tiled window: no sibling to resize against, so emulate
-            -- the target width via the workspace's gaps_out instead.
-            local base = require("core.windows").single_window_gaps(mon)
-            if size == "reset" then
-                hl.workspace_rule({ workspace = ws.name, gaps_out = base })
-            else
-                local target_w = math.floor(mon.width / mon.scale * size)
-                local side_gap = math.floor((mon.width / mon.scale - target_w) / 2)
-                hl.workspace_rule({
-                    workspace = ws.name,
-                    gaps_out  = { top = base.top, right = side_gap, bottom = base.bottom, left = side_gap },
-                })
-            end
-        else
-            local w = math.floor(mon.width / mon.scale * size)
-            hl.dispatch(hl.dsp.window.resize({ x = w, y = h }))
-        end
-    end, { description = "Cycle window size (¾ → ⅔ → ½ → ⅓ → ¼ → reset)" })
+    -- Cycle window size: SUPER + R → ¾ → ⅔ → ½ → ⅓ → ¼ → reset (core/resize_cycle.lua)
+    hl.bind(mainMod .. " + R", require("core.resize_cycle").cycle,
+                                                                       { description = "Cycle window size (¾ → ⅔ → ½ → ⅓ → ¼ → reset)" })
 
     -- Laptop multimedia keys for volume and LCD brightness
     hl.bind("XF86AudioRaiseVolume",  hl.dsp.exec_cmd("wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+"), { locked = true, repeating = true, description = "Volume up"       })

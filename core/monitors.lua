@@ -6,8 +6,8 @@ local M = {}
 -- both displays active instead.
 --
 -- Resets to the default (false) on Hyprland restart / config reload, same
--- as the other in-memory state in this config (see core/keybinding.lua's
--- _mru / _cycle_state).
+-- as the other in-memory state in this config (see core/alttab.lua's
+-- _mru and core/resize_cycle.lua's _state).
 
 local state = {
 	extend_laptop = false,

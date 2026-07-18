@@ -1,6 +1,6 @@
 local M = {}
 
--- Exposed so other modules (e.g. core/keybinding.lua's Super+R size-cycle
+-- Exposed so other modules (e.g. core/resize_cycle.lua's Super+R size-cycle
 -- toggle) can reuse the same monitor-aware gap calculation to emulate
 -- resizing a lone tiled window (dwindle has no sibling split to resize
 -- against when a window is alone on its workspace).

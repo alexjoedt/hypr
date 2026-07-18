@@ -20,8 +20,8 @@ function M.setup(opts)
     --hl.bind(mainMod .. " + P",         hl.dsp.window.pseudo(),        { description = "Toggle pseudo-tile"     }) -- dwindle
     -- hl.bind(mainMod .. " + J",      hl.dsp.layout("togglesplit")) -- dwindle
     hl.bind(mainMod .. " + minus",     hl.dsp.layout("togglesplit"),  { description = "Toggle split direction" }) -- dwindle: toggle vertical/horizontal split
-    hl.bind(mainMod .. " + SHIFT + O", function() hl.plugin.hyprexpo.expo("toggle") end,
-                                                                       { description = "Workspace overview"     }) -- workspace overview
+    hl.bind(mainMod .. " + SHIFT + O", function() hl.plugin.scrolloverview.overview("toggle") end,
+                                                                       { description = "Workspace overview"     }) -- workspace overview (scroll overview)
 
     -- Lock screen
     hl.bind(mainMod .. " + ALT + L",   hl.dsp.exec_cmd("hyprlock --quiet --grace 1"),

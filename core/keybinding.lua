@@ -122,6 +122,8 @@ function M.setup(opts)
     hl.bind(mainMod .. " + R", require("core.resize_cycle").cycle,
                                                                        { description = "Cycle window size (¾ → ⅔ → ½ → ⅓ → ¼ → reset)" })
 
+    hl.bind(mainMod .. " + comma", hl.dsp.layout("consume_or_expel prev"))
+    hl.bind(mainMod .. " + period", hl.dsp.layout("consume_or_expel next"))
     -- Laptop multimedia keys for volume and LCD brightness
     hl.bind("XF86AudioRaiseVolume",  hl.dsp.exec_cmd("wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+"), { locked = true, repeating = true, description = "Volume up"       })
     hl.bind("XF86AudioLowerVolume",  hl.dsp.exec_cmd("wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"),      { locked = true, repeating = true, description = "Volume down"     })

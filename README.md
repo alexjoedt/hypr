@@ -126,6 +126,16 @@ A hidden workspace you can summon and dismiss at any time — great for a persis
 
 ---
 
+## Displays
+
+The laptop screen (`eDP-1`) is automatically disabled whenever an external monitor is connected — any open workspaces on it are moved to the external monitor first. Unplugging the external monitor re-enables the laptop screen automatically. Closing the lid always disables the laptop screen while an external monitor is present (and locks + suspends when there isn't one); opening the lid re-applies the normal policy.
+
+| Shortcut | Action |
+|---|---|
+| `SUPER` + `ALT` + `M` | Toggle "extend" mode — keep the laptop screen on alongside an external monitor |
+
+---
+
 ## System & Media Shortcuts
 
 ### Media

@@ -45,6 +45,10 @@ function M.setup(opts)
     hl.bind(mainMod .. " + ALT + L",   hl.dsp.exec_cmd("hyprlock --quiet --grace 1"),
                                                                        { description = "Lock screen"            })
 
+    -- Toggle laptop display (off by default when an external monitor is connected)
+    hl.bind(mainMod .. " + ALT + M",   require("core.monitors").toggle_extend,
+                                                                       { description = "Toggle laptop display (extend/off)" })
+
     -- Borrow a window from another workspace / return it (hypr-borrow.sh)
     hl.bind(mainMod .. " + B",         hl.dsp.exec_cmd("~/.config/hypr/scripts/hypr-borrow.sh pull"),
                                                                        { description = "Borrow window"          })

@@ -37,6 +37,13 @@ function M.setup()
             --split_bias = 1,
         },
 
+        scrolling = {
+            -- Allow a solo column to be resized smaller than the full screen
+            -- (needed for the Super+R size-cycle toggle to work when only one
+            -- window is present on a scrolling-layout workspace).
+            fullscreen_on_one_column = false,
+        },
+
         -- https://wiki.hypr.land/Configuring/Basics/Variables/#decoration
         decoration = {
             rounding       = 10,

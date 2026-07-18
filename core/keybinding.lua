@@ -197,9 +197,20 @@ function M.setup(opts)
     hl.bind(mainMod .. " + mouse:272", hl.dsp.window.drag(),   { mouse = true, description = "Move window (drag)"   })
     hl.bind(mainMod .. " + mouse:273", hl.dsp.window.resize(), { mouse = true, description = "Resize window (drag)" })
 
-    -- Cycle window size: SUPER + R → ½ → ⅓ → ¼ → ½ …
-    -- Resizes the active window in-place (tiled or floating) without changing its floating state.
-    local _cycle_sizes = { 1/2, 1/3, 1/4 }
+    -- Cycle window size: SUPER + R → ¾ → ⅔ → ½ → ⅓ → ¼ → reset (full tile) → ¾ …
+    -- Resizes the active window in-place without changing its floating state.
+    --
+    -- Tiled windows need layout-specific handling because a generic
+    -- window.resize() only works by adjusting the split ratio between
+    -- sibling nodes — it silently no-ops on a window that's alone on its
+    -- workspace (nothing to trade space with):
+    --   - dwindle: pseudotile the window first so it can be sized smaller
+    --     than its tile slot regardless of siblings; "reset" un-pseudotiles.
+    --   - scrolling: use the layout's own colresize message, which sets an
+    --     exact column width fraction directly (see also
+    --     scrolling.fullscreen_on_one_column = false in core/visual.lua,
+    --     required so a solo column can actually shrink).
+    local _cycle_sizes = { 3/4, 2/3, 1/2, 1/3, 1/4, "reset" }
     local _cycle_state = {}  -- [window_address] = current_index
 
     hl.bind(mainMod .. " + R", function()
@@ -212,12 +223,38 @@ function M.setup(opts)
         local addr = win.address
         local idx  = (_cycle_state[addr] or 0) % #_cycle_sizes + 1
         _cycle_state[addr] = idx
+        local size = _cycle_sizes[idx]
 
-        local gap = 100
-        local w   = math.floor(mon.width  / mon.scale * _cycle_sizes[idx])
-        local h   = math.floor(mon.height / mon.scale - 2 * gap)
-        hl.dispatch(hl.dsp.window.resize({ x = w, y = h }))
-    end, { description = "Cycle window size (½ → ⅓ → ¼)" })
+        -- Width-only toggle: keep the window's current height untouched.
+        local h = win.size and win.size.y or math.floor(mon.height / mon.scale)
+
+        if win.floating then
+            if size == "reset" then return end -- no-op, next press continues the cycle
+            local w = math.floor(mon.width / mon.scale * size)
+            hl.dispatch(hl.dsp.window.resize({ x = w, y = h }))
+            hl.dispatch(hl.dsp.window.center({}))
+            return
+        end
+
+        local ws     = hl.get_active_workspace()
+        local layout = ws and ws.tiled_layout or "dwindle"
+
+        if layout == "scrolling" then
+            if size == "reset" then
+                hl.dispatch(hl.dsp.layout("colresize 1.0"))
+            else
+                hl.dispatch(hl.dsp.layout("colresize " .. size))
+            end
+        else
+            if size == "reset" then
+                --hl.dispatch(hl.dsp.window.pseudo({ action = "off" }))
+            else
+                --hl.dispatch(hl.dsp.window.pseudo({ action = "on" }))
+                local w = math.floor(mon.width / mon.scale * size)
+                hl.dispatch(hl.dsp.window.resize({ x = w, y = h }))
+            end
+        end
+    end, { description = "Cycle window size (¾ → ⅔ → ½ → ⅓ → ¼ → reset)" })
 
     -- Laptop multimedia keys for volume and LCD brightness
     hl.bind("XF86AudioRaiseVolume",  hl.dsp.exec_cmd("wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+"), { locked = true, repeating = true, description = "Volume up"       })

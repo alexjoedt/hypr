@@ -1,5 +1,10 @@
 local M = {}
 
+-- Exposed so other modules (e.g. core/keybinding.lua's Super+R size-cycle
+-- toggle) can reuse the same monitor-aware gap calculation to emulate
+-- resizing a lone tiled window (dwindle has no sibling split to resize
+-- against when a window is alone on its workspace).
+
 -- ─── Single-window auto-centering (resolution-aware) ─────────────────────────
 -- Gaps are computed from each monitor's *logical* width (physical px ÷ scale).
 -- Thresholds and multipliers can be freely adjusted here.
@@ -30,6 +35,8 @@ local function single_window_gaps(m)
 		return { top = 20, right = 20, bottom = 20, left = 20 }
 	end
 end
+
+M.single_window_gaps = single_window_gaps
 
 local function register_centering_rule(m)
 	hl.workspace_rule({

@@ -56,7 +56,7 @@ pull() {
     hyprctl dispatch "hl.dsp.focus({ window = 'address:${addr}' })"
 
     if [ "$HYPR_BORROW_FLOAT" = "true" ]; then
-        # Float, resize, then center — same as Super+T
+        # Float, resize, then center — same as Super+P
         local win_w win_h
         read -r win_w win_h < <(hyprctl monitors -j | jq -r \
             --argjson gap  "$HYPR_BORROW_GAP" \

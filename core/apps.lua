@@ -125,7 +125,6 @@ function M.setup(opts)
     -- Example: startOrFocus("firefox", 3, "f")
     M.startOrFocus("firefox", 3, "f")
     M.startOrFocus("zed", 2, "z")
-    M.startOrFocus("zed", 2, "y")
 end
 
 return M

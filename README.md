@@ -63,10 +63,9 @@ Toggle how a window behaves in the layout.
 
 | Shortcut | Action |
 |---|---|
-| `SUPER` + `T` | Toggle floating |
+| `SUPER` + `P` | Toggle floating (centered) |
 | `SUPER` + `SHIFT` + `F` | Toggle Focus mode (centered layout) |
 | `SUPER` + `O` | Pop out — floating + sticky (follows you across all workspaces) |
-| `SUPER` + `P` | Toggle pseudo-tiling (dwindle) |
 | `SUPER` + `-` | Toggle split direction (vertical ↔ horizontal) for dwindle |
 | `SUPER` + Left mouse drag | Move floating window |
 | `SUPER` + Right mouse drag | Resize window |

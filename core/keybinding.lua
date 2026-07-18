@@ -64,7 +64,7 @@ function M.setup(opts)
                                                                        { description = "Walker (windows)"       })
 
     hl.bind(mainMod .. " + V", hl.dsp.exec_cmd("walker --provider clipboard"),
-                                                                        { description = "Walker (calculator)"       })
+                                                                        { description = "Walker (clipboard)"        })
 
     -- Launch numbr with Super+Shift+N
     hl.bind(mainMod .. " + SHIFT + N", hl.dsp.exec_cmd("numbr"),

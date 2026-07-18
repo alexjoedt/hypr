@@ -6,11 +6,13 @@ function M.setup()
     hl.env("HYPRCURSOR_SIZE", "24")
 
     -- NVIDIA Wayland configuration (added by nvidia-installer)
-    hl.env("LIBVA_DRIVER_NAME", "nvidia")
-    hl.env("GBM_BACKEND", "nvidia-drm")
-    hl.env("__GLX_VENDOR_LIBRARY_NAME", "nvidia")
-    hl.env("NVD_BACKEND", "direct")
-    hl.config({ cursor = { no_hardware_cursors = true } })
+    -- Not needed on this machine (AMD GPU) — kept commented for reference
+    -- in case this config is ever reused on NVIDIA hardware.
+    -- hl.env("LIBVA_DRIVER_NAME", "nvidia")
+    -- hl.env("GBM_BACKEND", "nvidia-drm")
+    -- hl.env("__GLX_VENDOR_LIBRARY_NAME", "nvidia")
+    -- hl.env("NVD_BACKEND", "direct")
+    -- hl.config({ cursor = { no_hardware_cursors = true } }) -- NVIDIA hw cursor workaround
     hl.env("XDG_CURRENT_DESKTOP", "Hyprland")
     hl.env("XDG_SESSION_TYPE", "wayland")
     hl.env("XDG_SESSION_DESKTOP", "Hyprland")

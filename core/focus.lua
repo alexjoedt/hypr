@@ -2,7 +2,7 @@
 local M = {}
 
 local focused = {}            -- workspace id -> true while focus mode is on
-local DEFAULT_GAPS_OUT = 3    -- keep in sync with general.gaps_out in core/visual.lua
+local DEFAULT_GAPS_OUT = 20   -- keep in sync with general.gaps_out in core/visual.lua
 
 -- fraction of monitor width the content should occupy
 local WIDTH_ONE = 0.5         -- single window: 50% wide, centered

@@ -55,24 +55,24 @@ function M.setup()
 
             -- https://wiki.hypr.land/Configuring/Basics/Variables/#blur
 
-		blur = {
-			size = 8,
-			passes = 3,
-			noise = 0.02,
-			brightness = 1,
-			contrast = 1,
-			vibrancy = 0.5,
+            blur = {
+                size = 8,
+                passes = 3,
+                noise = 0.02,
+                brightness = 1,
+                contrast = 1,
+                vibrancy = 0.5,
 
-			popups = true,
-			popups_ignorealpha = 0.2,
+                popups = true,
+                popups_ignorealpha = 0.2,
 
-			input_methods = true,
-			input_methods_ignorealpha = 0.2,
+                input_methods = true,
+                input_methods_ignorealpha = 0.2,
 
-			new_optimizations = true,
-			xray = false, -- If true, ignores what is behind floating windows
-			special = false,
-		},
+                new_optimizations = true,
+                xray = false, -- If true, ignores what is behind floating windows
+                special = false,
+            },
         },
 
         -- https://wiki.hypr.land/Configuring/Basics/Variables/#animations

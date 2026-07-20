@@ -173,7 +173,7 @@ The laptop screen (`eDP-1`) is automatically disabled whenever an external monit
 | Shortcut | Action |
 |---|---|
 | `Print` | Screenshot whole screen → `~/Pictures/Screenshots/` |
-| `SUPER` + `Print` | Select an area, annotate with `satty`, copy to clipboard + save |
+| `SUPER` + `Print` or `SUPER` + `SHIFT` + `P` | Select an area, annotate with `satty`, copy to clipboard + save |
 | `SUPER` + `/` | Open interactive keybindings cheatsheet (walker) |
 
 ---

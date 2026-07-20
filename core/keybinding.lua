@@ -41,8 +41,10 @@ function M.setup(opts)
     -- Print: grab the whole screen and save it directly
     hl.bind("Print",               hl.dsp.exec_cmd('mkdir -p ~/Pictures/Screenshots && grim ~/Pictures/Screenshots/$(date +%Y%m%d_%H%M%S).png'),
                                                                        { description = "Screenshot (full screen)"           })
-    -- Super + Print: select an area, annotate with satty, copy to clipboard and save
+    -- Super + Print (or Super + Shift + P): select an area, annotate with satty, copy to clipboard and save
     hl.bind(mainMod .. " + Print", hl.dsp.exec_cmd('mkdir -p ~/Pictures/Screenshots && grim -g "$(slurp)" - | satty -f - --copy-command wl-copy -o ~/Pictures/Screenshots/%Y%m%d_%H%M%S.png'),
+                                                                       { description = "Screenshot (select area + annotate)" })
+    hl.bind(mainMod .. " + SHIFT + P", hl.dsp.exec_cmd('mkdir -p ~/Pictures/Screenshots && grim -g "$(slurp)" - | satty -f - --copy-command wl-copy -o ~/Pictures/Screenshots/%Y%m%d_%H%M%S.png'),
                                                                        { description = "Screenshot (select area + annotate)" })
 
     -- Walker launcher (elephant window provider)

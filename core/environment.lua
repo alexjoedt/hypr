@@ -2,6 +2,12 @@ local M = {}
 
 function M.setup()
     -- See https://wiki.hypr.land/Configuring/Advanced-and-Cool/Environment-variables/
+
+    -- Hyprland's own PATH doesn't inherit ~/.local/bin from shell rc files
+    -- (it's started before/outside the interactive shell), so binds calling
+    -- commands installed there (e.g. "numbr") fail to exec silently.
+    hl.env("PATH", "/home/alex/.local/bin:$PATH")
+
     hl.env("XCURSOR_SIZE", "24")
     hl.env("HYPRCURSOR_SIZE", "24")
 

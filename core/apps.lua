@@ -10,7 +10,22 @@ local defaultApps = {
         cmd = "/home/alex/.local/bin/zed",
         class = "zed",
         classPattern = "[Zz][Ee][Dd]",
-    }
+    },
+
+    obsidian = {
+        cmd = "obsidian",
+        class = "obsidian",
+    },
+
+    scratch = {
+        cmd = "scratch",
+        class = "scratch",
+    },
+
+    scratchterm = {
+        cmd = "wezterm start --class scratchterm",
+        class = "scratchterm",
+    },
 }
 
 local state = {
@@ -125,6 +140,9 @@ function M.setup(opts)
     -- Example: startOrFocus("firefox", 3, "f")
     M.startOrFocus("firefox", 3, "f")
     M.startOrFocus("zed", 2, "z")
+    M.startOrFocus("obsidian", 5, "n")
+    M.startOrFocus("scratch", "special:magic", "q")
+    M.startOrFocus("scratchterm", "special:magic", "SHIFT + T")
 end
 
 return M

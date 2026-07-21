@@ -6,7 +6,18 @@ function M.setup()
     -- Hyprland's own PATH doesn't inherit ~/.local/bin from shell rc files
     -- (it's started before/outside the interactive shell), so binds calling
     -- commands installed there (e.g. "numbr") fail to exec silently.
-    hl.env("PATH", "/home/alex/.local/bin:$PATH")
+    --
+    -- hl.env does NOT expand $VAR — use os.getenv() (wiki Environment-variables).
+    -- Never write "...:$PATH" as a string: it becomes a literal and breaks every
+    -- exec bind (sh, wezterm, grim, obsidian, … all live under /usr/bin).
+    local path = os.getenv("PATH") or ""
+    if path == "" or path:find("%$PATH", 1) or not path:find("/usr/bin", 1, true) then
+        path = "/usr/local/sbin:/usr/local/bin:/usr/bin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl"
+    end
+    if not path:find("/home/alex/.local/bin", 1, true) then
+        path = "/home/alex/.local/bin:" .. path
+    end
+    hl.env("PATH", path)
 
     hl.env("XCURSOR_SIZE", "24")
     hl.env("HYPRCURSOR_SIZE", "24")

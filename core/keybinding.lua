@@ -24,7 +24,7 @@ function M.setup(opts)
 		hl.plugin.scrolloverview.overview("toggle")
 	end, { description = "Workspace overview" }) -- workspace overview (scroll overview)
 
-	-- Lock screen
+	-- Lock screen (hypridle lock_cmd → single hyprlock instance)
 	hl.bind(mainMod .. " + ALT + L", hl.dsp.exec_cmd("hyprlock --quiet --grace 1"), {
 		description = "Lock screen",
 	})

@@ -115,8 +115,8 @@ function M.setup()
 			hl.exec_cmd("notify-send 'Lid closed' 'Laptop screen off (external monitor connected)'")
 			disable_edp1(external[1].name)
 		else
-			hl.exec_cmd("notify-send 'Lid closed' 'Locking and suspending…'")
-			hl.exec_cmd("hyprlock")
+			-- hypridle before_sleep_cmd locks via loginctl before sleep
+			hl.exec_cmd("notify-send 'Lid closed' 'Suspending…'")
 			hl.exec_cmd("systemctl suspend")
 		end
 	end, { locked = true })

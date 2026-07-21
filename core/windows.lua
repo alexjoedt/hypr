@@ -90,6 +90,13 @@ function M.setup()
 		float  = true,
 		size   = { 680, 520 },
 		center = true,
+    })
+
+	hl.window_rule({
+		match  = { class = "^(com\\.gabm\\.satty)$" },
+		float  = true,
+		size   = { 900, 640 },
+		center = true,
 	})
 	-- Ignore maximize requests from apps. You'll probably like this.
 	-- hl.window_rule({

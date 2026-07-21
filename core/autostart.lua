@@ -13,7 +13,7 @@ function M.setup()
 		--hl.exec_cmd("qs")
 		hl.exec_cmd("qs -c noctalia-shell")
 		--hl.exec_cmd("noctalia")
-		--hl.exec_cmd("hypridle -q")
+		hl.exec_cmd("hypridle -q")
 		hl.exec_cmd("systemctl --user restart elephant")
 	end)
 end

@@ -52,6 +52,7 @@ hl = {
   monitor        = function() end,
   window_rule    = function() end,
   workspace_rule = function() end,
+  layer_rule     = function() end,
   curve          = function() end,
   animation      = function() end,
   gesture        = function() end,

@@ -137,8 +137,7 @@ function M.setup(opts)
     state.mainMod = opts.mainMod or "SUPER"
     state.apps = opts.apps or defaultApps
 
-    -- Example: startOrFocus("firefox", 3, "f")
-    M.startOrFocus("firefox", 3, "f")
+    M.startOrFocus("firefox", 1, "f")
     M.startOrFocus("zed", 2, "z")
     M.startOrFocus("obsidian", 5, "n")
     M.startOrFocus("scratch", "special:magic", "q")

@@ -69,7 +69,7 @@ function M.setup()
 
 	-- Example window rule
 	-- hl.window_rule({ match = { class = "kitty", title = "kitty" }, float = true })
-	hl.workspace_rule({ workspace = "1", layout = "scrolling", layout_opts = { direction = "right"}  }) -- no gaps on workspace 1
+	--hl.workspace_rule({ workspace = "1", layout = "scrolling", layout_opts = { direction = "right"}  }) -- no gaps on workspace 1
 
 	-- WezTerm — enable blur behind the transparent window.
 	hl.layer_rule({ match = { namespace = "^(org.wezfurlong.wezterm|wezterm.*)$" }, blur = true })

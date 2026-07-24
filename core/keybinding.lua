@@ -16,6 +16,11 @@ function M.setup(opts)
 	hl.bind(mainMod .. " + P", require("core.float").toggle_centered, { description = "Toggle float (centered)" })
 	hl.bind(mainMod .. " + O", require("core.float").popout, { description = "Pop out (float + pin)" })
 	hl.bind(mainMod .. " + SHIFT + F", require("core.focus").toggle, { description = "Focus mode" }) -- focus mode: center 1-2 windows
+	hl.bind(
+		mainMod .. " + T",
+		require("core.layout_toggle").toggle_ws1,
+		{ description = "Toggle WS1 layout (dwindle/scrolling)" }
+	)
 	hl.bind(mainMod .. " + Space", hl.dsp.exec_cmd(menu), { description = "App launcher" })
 	--hl.bind(mainMod .. " + P",         hl.dsp.window.pseudo(),        { description = "Toggle pseudo-tile"     }) -- dwindle
 	-- hl.bind(mainMod .. " + J",      hl.dsp.layout("togglesplit")) -- dwindle

@@ -1,5 +1,5 @@
 ---
-description: Apply when working on Hyprland Lua config files (hyprland.lua, core/*.lua)
+description: Apply when working on Hyprland Lua config files (hyprland.lua, core/**/*.lua)
 applyTo: "**/*.lua"
 ---
 
@@ -8,9 +8,12 @@ applyTo: "**/*.lua"
 This is a modular Hyprland compositor configuration written in Lua using the native Hyprland Lua config API (`hl.*`).
 
 **Entry point:** `hyprland.lua` — orchestrates module load order.  
-**Modules:** `core/` — each file exports a table `M` with a `setup(opts?)` function.
+**Main modules:** flat `core/*.lua` files — each exports a table `M` with a `setup(opts?)` function (except `programs`).  
+**Helpers:** packages at `core/<name>/init.lua`, required as `require("core.<name>")` (Hyprland `package.path` includes `?/init.lua`).
 
 ## Module Structure
+
+### Main (flat `core/*.lua`)
 
 | File | Responsibility |
 |---|---|
@@ -18,10 +21,24 @@ This is a modular Hyprland compositor configuration written in Lua using the nat
 | `core/environment.lua` | Wayland/NVIDIA env vars via `hl.env()` |
 | `core/visual.lua` | `hl.config()` for general, decoration, animations, curves, layout, misc |
 | `core/input.lua` | `hl.config({ input = … })`, gestures, per-device config |
-| `core/monitors.lua` | `hl.monitor()` definitions |
-| `core/windows.lua` | `hl.window_rule()` and `hl.workspace_rule()` |
+| `core/monitors.lua` | `hl.monitor()` definitions + laptop extend toggle |
+| `core/windows.lua` | `hl.window_rule()` / `hl.workspace_rule()` / layer rules; exposes `single_window_gaps` |
 | `core/keybinding.lua` | `hl.bind()` calls; accepts `opts` table with `terminal`, `fileManager`, `menu`, `mainMod` |
+| `core/apps.lua` | App launch / focus binds |
+| `core/plugins.lua` | Plugin config |
 | `core/autostart.lua` | `hl.on("hyprland.start", …)` callbacks |
+
+### Helpers (`core/<name>/init.lua`)
+
+| Package | Responsibility |
+|---|---|
+| `core/alttab` | Global MRU Alt+Tab cycle |
+| `core/float` | Centered float toggle + pop-out (pin) |
+| `core/focus` | Per-workspace focus mode (centered 1–2 windows) |
+| `core/layout_toggle` | Toggle workspace 1 dwindle ↔ scrolling |
+| `core/resize_cycle` | Super+R size cycle (¾ → ⅔ → ½ → ⅓ → ¼ → reset) |
+
+New helpers: one folder per helper, entry file `init.lua`, require as `require("core.<name>")`. Do not leave helper logic as a new flat `core/*.lua` unless it is a main config module loaded from `hyprland.lua`.
 
 ## Load Order Rules
 

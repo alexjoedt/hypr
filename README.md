@@ -1,6 +1,8 @@
 # Hyprland Config — Quick Reference
 
-> A modular Hyprland setup written in Lua. Entry point: [hyprland.lua](hyprland.lua) — all modules live under [core/](core/).
+> A modular Hyprland setup written in Lua. Entry point: [hyprland.lua](hyprland.lua).
+>
+> **Layout:** main config modules are flat files under [core/](core/) (`windows.lua`, `keybinding.lua`, …). Behavior helpers live in packages: `core/<name>/init.lua` (e.g. [core/alttab](core/alttab), [core/float](core/float), [core/focus](core/focus), [core/layout_toggle](core/layout_toggle), [core/resize_cycle](core/resize_cycle)). Require them as `require("core.alttab")` — Hyprland resolves `?/init.lua`.
 
 ---
 

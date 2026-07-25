@@ -1,4 +1,4 @@
--- core/layout_toggle.lua — toggle workspace 1 between dwindle and scrolling
+-- core/layout_toggle/init.lua — toggle workspace 1 between dwindle and scrolling
 local M = {}
 
 local WS = "1"

@@ -1,4 +1,4 @@
--- core/alttab.lua — Alt+Tab: cycle windows across all workspaces in MRU order.
+-- core/alttab/init.lua — Alt+Tab: cycle windows across all workspaces in MRU order.
 --
 -- _mru   : list of window addresses ordered by last focus time,
 --          _mru[1] = oldest, _mru[#_mru] = current.

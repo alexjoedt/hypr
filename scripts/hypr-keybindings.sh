@@ -73,7 +73,7 @@ require = function(mod)
   })
 end
 
-package.path = hypr_dir .. "/?.lua;" .. package.path
+package.path = hypr_dir .. "/?.lua;" .. hypr_dir .. "/?/init.lua;" .. package.path
 
 local ok, err = pcall(dofile, hypr_dir .. "/hyprland.lua")
 if not ok then

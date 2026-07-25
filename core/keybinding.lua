@@ -133,7 +133,7 @@ function M.setup(opts)
 		{ description = "Swap window down" }
 	)
 
-	-- Alt + Tab: cycle windows across all workspaces in MRU order (core/alttab.lua)
+	-- Alt + Tab: cycle windows across all workspaces in MRU order (core/alttab)
 	require("core.alttab").setup()
 	hl.bind("ALT + Tab", require("core.alttab").prev, { description = "Alt+Tab: previous window (global MRU)" })
 	hl.bind("ALT + SHIFT + Tab", require("core.alttab").next, { description = "Alt+Tab: next window (global MRU)" })
@@ -183,7 +183,7 @@ function M.setup(opts)
 	hl.bind(mainMod .. " + mouse:272", hl.dsp.window.drag(), { mouse = true, description = "Move window (drag)" })
 	hl.bind(mainMod .. " + mouse:273", hl.dsp.window.resize(), { mouse = true, description = "Resize window (drag)" })
 
-	-- Cycle window size: SUPER + R → ¾ → ⅔ → ½ → ⅓ → ¼ → reset (core/resize_cycle.lua)
+	-- Cycle window size: SUPER + R → ¾ → ⅔ → ½ → ⅓ → ¼ → reset (core/resize_cycle)
 	hl.bind(
 		mainMod .. " + R",
 		require("core.resize_cycle").cycle,

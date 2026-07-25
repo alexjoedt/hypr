@@ -1,4 +1,4 @@
--- core/focus.lua — per-workspace "focus mode": center 1–2 tiled windows
+-- core/focus/init.lua — per-workspace "focus mode": center 1–2 tiled windows
 local M = {}
 
 local focused = {}            -- workspace id -> true while focus mode is on

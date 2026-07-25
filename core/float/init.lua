@@ -1,4 +1,4 @@
--- core/float.lua — floating-window helpers: centered toggle + pop-out (pin)
+-- core/float/init.lua — floating-window helpers: centered toggle + pop-out (pin)
 local M = {}
 
 -- Toggle float: center + resize with 100px top/bottom gap.

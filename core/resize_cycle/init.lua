@@ -15,78 +15,86 @@
 --     required so a solo column can actually shrink).
 local M = {}
 
-local _sizes = { 1, 0.75, 0.5, 0.33 }
-local _state = {}  -- [window_address] = current_index
+local _sizes = { 1, 0.667, 0.5, 0.33 }
+local _state = {} -- [window_address] = current_index
 
 -- Count tiled (non-floating) windows on the given workspace name.
 local function _tiled_count(ws_name)
-    if not ws_name then return 2 end -- unknown → assume non-solo, safest default
-    local n = 0
-    for _, w in ipairs(hl.get_windows()) do
-        local ok, wname = pcall(function() return w.workspace.name end)
-        if ok and wname == ws_name and not w.floating then
-            n = n + 1
-        end
-    end
-    return n
+	if not ws_name then
+		return 2
+	end -- unknown → assume non-solo, safest default
+	local n = 0
+	for _, w in ipairs(hl.get_windows()) do
+		local ok, wname = pcall(function()
+			return w.workspace.name
+		end)
+		if ok and wname == ws_name and not w.floating then
+			n = n + 1
+		end
+	end
+	return n
 end
 
 function M.cycle()
-    local win = hl.get_active_window()
-    if not win then return end
+	local win = hl.get_active_window()
+	if not win then
+		return
+	end
 
-    local mon = hl.get_active_monitor()
-    if not mon then return end
+	local mon = hl.get_active_monitor()
+	if not mon then
+		return
+	end
 
-    local addr = win.address
-    local idx  = (_state[addr] or 0) % #_sizes + 1
-    _state[addr] = idx
-    local size = _sizes[idx]
+	local addr = win.address
+	local idx = (_state[addr] or 0) % #_sizes + 1
+	_state[addr] = idx
+	local size = _sizes[idx]
 
-    -- Width-only toggle: keep the window's current height untouched.
-    local h = win.size and win.size.y or math.floor(mon.height / mon.scale)
+	-- Width-only toggle: keep the window's current height untouched.
+	local h = win.size and win.size.y or math.floor(mon.height / mon.scale)
 
-    if win.floating then
-        -- if size == "reset" then return end -- no-op, next press continues the cycle
-        local w = math.floor(mon.width / mon.scale * size)
-        hl.dispatch(hl.dsp.window.resize({ x = w, y = h }))
-        hl.dispatch(hl.dsp.window.center({}))
-        return
-    end
+	if win.floating then
+		-- if size == "reset" then return end -- no-op, next press continues the cycle
+		local w = math.floor(mon.width / mon.scale * size)
+		hl.dispatch(hl.dsp.window.resize({ x = w, y = h }))
+		hl.dispatch(hl.dsp.window.center({}))
+		return
+	end
 
-    local ws     = hl.get_active_workspace()
-    local layout = ws and ws.tiled_layout or "dwindle"
+	local ws = hl.get_active_workspace()
+	local layout = ws and ws.tiled_layout or "dwindle"
 
-    if layout == "scrolling" then
-        if size == 1 then
-            hl.dispatch(hl.dsp.layout("colresize 1.0"))
-        else
-            hl.dispatch(hl.dsp.layout("colresize " .. size))
-        end
-        return
-    end
+	if layout == "scrolling" then
+		if size == 1 then
+			hl.dispatch(hl.dsp.layout("colresize 1.0"))
+		else
+			hl.dispatch(hl.dsp.layout("colresize " .. size))
+		end
+		return
+	end
 
-    if ws and _tiled_count(ws.name) <= 1 then
-        -- Solo tiled window: no sibling to resize against, so emulate
-        -- the target width via the workspace's gaps_out instead.
-        local base = require("core.windows").single_window_gaps(mon)
-        if size == 1 then
-            hl.workspace_rule({ workspace = ws.name, gaps_out = base })
-        else
-            local target_w = math.floor(mon.width / mon.scale * size)
-            local side_gap = math.floor((mon.width / mon.scale - target_w) / 2)
-            hl.workspace_rule({
-                workspace = ws.name,
-                gaps_out  = { top = base.top, right = side_gap, bottom = base.bottom, left = side_gap },
-            })
-        end
-    else
-        if size == 1 then
-            return
-        end
-        local w = math.floor(mon.width / mon.scale * size)
-        hl.dispatch(hl.dsp.window.resize({ x = w, y = h }))
-    end
+	if ws and _tiled_count(ws.name) <= 1 then
+		-- Solo tiled window: no sibling to resize against, so emulate
+		-- the target width via the workspace's gaps_out instead.
+		local base = require("core.windows").single_window_gaps(mon)
+		if size == 1 then
+			hl.workspace_rule({ workspace = ws.name, gaps_out = base })
+		else
+			local target_w = math.floor(mon.width / mon.scale * size)
+			local side_gap = math.floor((mon.width / mon.scale - target_w) / 2)
+			hl.workspace_rule({
+				workspace = ws.name,
+				gaps_out = { top = base.top, right = side_gap, bottom = base.bottom, left = side_gap },
+			})
+		end
+	else
+		if size == 1 then
+			return
+		end
+		local w = math.floor(mon.width / mon.scale * size)
+		hl.dispatch(hl.dsp.window.resize({ x = w, y = h }))
+	end
 end
 
 return M

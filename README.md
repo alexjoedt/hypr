@@ -2,7 +2,7 @@
 
 > A modular Hyprland setup written in Lua. Entry point: [hyprland.lua](hyprland.lua).
 >
-> **Layout:** main config modules are flat files under [core/](core/) (`windows.lua`, `keybinding.lua`, …). Behavior helpers live in packages: `core/<name>/init.lua` (e.g. [core/alttab](core/alttab), [core/float](core/float), [core/focus](core/focus), [core/layout_toggle](core/layout_toggle), [core/resize_cycle](core/resize_cycle)). Require them as `require("core.alttab")` — Hyprland resolves `?/init.lua`.
+> **Layout:** main config modules are flat files under [core/](core/) (`windows.lua`, `keybinding.lua`, …). Behavior helpers live in packages: `core/<name>/init.lua` (e.g. [core/alttab](core/alttab), [core/float](core/float), [core/focus](core/focus), [core/kb_toggle](core/kb_toggle), [core/layout_toggle](core/layout_toggle), [core/resize_cycle](core/resize_cycle)). Require them as `require("core.alttab")` — Hyprland resolves `?/init.lua`.
 
 ---
 
@@ -11,7 +11,7 @@
 | Setting          | Value                  |
 |------------------|------------------------|
 | Modifier key     | `SUPER` (Windows key)  |
-| Keyboard layout  | `de` (German)          |
+| Keyboard layout  | EurKEY QWERTZ (toggle ↔ `de`) |
 | Terminal         | `wezterm`              |
 | File manager     | `nautilus`             |
 | App launcher     | `walker`               |
@@ -135,6 +135,16 @@ The laptop screen (`eDP-1`) is automatically disabled whenever an external monit
 | Shortcut | Action |
 |---|---|
 | `SUPER` + `ALT` + `M` | Toggle "extend" mode — keep the laptop screen on alongside an external monitor |
+
+---
+
+## Keyboard
+
+Default is EurKEY on a QWERTZ base ([eurkey_qwertz.xkb](eurkey_qwertz.xkb)). Toggle switches to standard German `de` and back. Resets to EurKEY on Hyprland restart / config reload.
+
+| Shortcut | Action |
+|---|---|
+| `SUPER` + `CTRL` + `Space` | Toggle keyboard layout (EurKEY QWERTZ ↔ `de`) |
 
 ---
 

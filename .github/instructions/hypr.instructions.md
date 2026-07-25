@@ -35,6 +35,7 @@ This is a modular Hyprland compositor configuration written in Lua using the nat
 | `core/alttab` | Global MRU Alt+Tab cycle |
 | `core/float` | Centered float toggle + pop-out (pin) |
 | `core/focus` | Per-workspace focus mode (centered 1–2 windows) |
+| `core/kb_toggle` | Toggle keyboard EurKEY QWERTZ ↔ de |
 | `core/layout_toggle` | Toggle workspace 1 dwindle ↔ scrolling |
 | `core/resize_cycle` | Super+R size cycle (¾ → ⅔ → ½ → ⅓ → ¼ → reset) |
 

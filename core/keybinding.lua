@@ -41,6 +41,13 @@ function M.setup(opts)
 		{ description = "Toggle laptop display (extend/off)" }
 	)
 
+	-- Toggle keyboard layout: EurKEY QWERTZ ↔ de
+	hl.bind(
+		mainMod .. " + CTRL + Space",
+		require("core.kb_toggle").toggle,
+		{ description = "Toggle keyboard (EurKEY / de)" }
+	)
+
 	-- Borrow a window from another workspace / return it (hypr-borrow.sh)
 	hl.bind(
 		mainMod .. " + B",

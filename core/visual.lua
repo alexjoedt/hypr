@@ -5,6 +5,11 @@ function M.setup()
 
 	-- https://wiki.hypr.land/Configuring/Basics/Variables/#general
 	hl.config({
+		
+		misc = {
+        	focus_on_activate = true,
+    	},
+
 		general = {
 			gaps_in = 5,
 			gaps_out = 5,

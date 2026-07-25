@@ -15,7 +15,7 @@
 --     required so a solo column can actually shrink).
 local M = {}
 
-local _sizes = { 1, 0.75, 0.67, 0.5, 0.33, 0.25 }
+local _sizes = { 1, 0.75, 0.5, 0.33 }
 local _state = {}  -- [window_address] = current_index
 
 -- Count tiled (non-floating) windows on the given workspace name.

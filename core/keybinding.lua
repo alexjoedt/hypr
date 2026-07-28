@@ -140,10 +140,17 @@ function M.setup(opts)
 		{ description = "Swap window down" }
 	)
 
-	-- Alt + Tab: cycle windows across all workspaces in MRU order (core/alttab)
-	require("core.alttab").setup()
-	hl.bind("ALT + Tab", require("core.alttab").prev, { description = "Alt+Tab: previous window (global MRU)" })
-	hl.bind("ALT + SHIFT + Tab", require("core.alttab").next, { description = "Alt+Tab: next window (global MRU)" })
+	-- Alt + Tab: hypr-alt-tab plugin (live preview strip). Config in core/plugins.lua.
+	hl.bind("ALT + Tab", function()
+		if hl.plugin.alttab then
+			hl.plugin.alttab.next()
+		end
+	end, { description = "Alt+Tab: next (hypr-alt-tab)" })
+	hl.bind("ALT + SHIFT + Tab", function()
+		if hl.plugin.alttab then
+			hl.plugin.alttab.prev()
+		end
+	end, { description = "Alt+Tab: prev (hypr-alt-tab)" })
 
 	-- Groups (tabbed windows)
 	hl.bind(mainMod .. " + G", hl.dsp.group.toggle(), { description = "Toggle window group" }) -- create / dissolve group

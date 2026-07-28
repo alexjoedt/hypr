@@ -20,6 +20,12 @@ function M.setup()
                 workspace_gap = 50,
                 layout = "vertical",
             },
+            -- hypr-alt-tab (requires Config V2 registration in plugin)
+            alttab = {
+                release_key = "Alt_L",
+                include_special = 0,
+                animations = 1,
+            },
         },
     })
 

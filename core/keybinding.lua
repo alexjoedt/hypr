@@ -10,7 +10,7 @@ function M.setup(opts)
 
 	-- Example binds, see https://wiki.hypr.land/Configuring/Basics/Binds/ for more
 	hl.bind(mainMod .. " + Return", hl.dsp.exec_cmd(terminal), { description = "Terminal" })
-	hl.bind(mainMod .. " + W", hl.dsp.window.close(), { description = "Close window" })
+	hl.bind(mainMod .. " + Q", hl.dsp.window.close(), { description = "Close window" })
 	hl.bind(mainMod .. " + M", hl.dsp.exit(), { description = "Exit Hyprland" })
 	hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(fileManager), { description = "File manager" })
 	hl.bind(mainMod .. " + P", require("core.float").toggle_centered, { description = "Toggle float (centered)" })
@@ -84,11 +84,7 @@ function M.setup(opts)
 	)
 
 	-- Walker launcher (elephant window provider)
-	hl.bind(
-		mainMod .. " + SHIFT + W",
-		hl.dsp.exec_cmd("walker --provider windows"),
-		{ description = "Walker (windows)" }
-	)
+	hl.bind("CTRL + SPACE", hl.dsp.exec_cmd("walker --provider windows"), { description = "Walker (windows)" })
 
 	hl.bind(mainMod .. " + V", hl.dsp.exec_cmd("walker --provider clipboard"), {
 		description = "Walker (clipboard)",

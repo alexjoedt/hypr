@@ -139,8 +139,8 @@ function M.setup(opts)
 
 	M.startOrFocus("firefox", 1, "f")
 	M.startOrFocus("zed", 2, "z")
-	M.startOrFocus("obsidian", 5, "n")
-	M.startOrFocus("scratch", "special:magic", "SHIFT + K")
+	M.startOrFocus("obsidian", 9, "n")
+	M.startOrFocus("blockpad", "special:magic", "SHIFT + K")
 	M.startOrFocus("scratchterm", "special:magic", "SHIFT + T")
 end
 

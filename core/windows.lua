@@ -105,6 +105,13 @@ function M.setup()
 		size = { 900, 640 },
 		center = true,
 	})
+	-- Slack Huddle preview -- float and pin across all workspaces
+	hl.window_rule({
+		match = { class = "^(slack)$", title = ".*[Hh]uddle.*" },
+		float = true,
+		pin = true,
+	})
+
 	-- Ignore maximize requests from apps. You'll probably like this.
 	-- hl.window_rule({
 	--     name  = "suppress-maximize-events",

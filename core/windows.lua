@@ -76,7 +76,7 @@ function M.setup()
 
 	-- File managers — always float regardless of their default tile hint.
 	-- See https://wiki.hypr.land/Configuring/Basics/Window-Rules/
-	local file_managers = { "thunar", "nautilus", "dolphin", "nemo", "pcmanfm", "spacefm", "caja" }
+	local file_managers = { "thunar", "dolphin", "nemo", "pcmanfm", "spacefm", "caja" }
 	for _, fm in ipairs(file_managers) do
 		hl.window_rule({
 			name = "float-" .. fm,
@@ -84,6 +84,13 @@ function M.setup()
 			float = true,
 		})
 	end
+	hl.window_rule({
+		name = "float-nautilus",
+		match = { class = "^(org.gnome.Nautilus|nautilus)$" },
+		float = true,
+		size = { 1340, 1000 },
+		center = true,
+	})
 	-- numbr calculator — float, centre, and set a fixed size
 	hl.window_rule({
 		match = { class = "^(numbr)$" },

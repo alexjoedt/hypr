@@ -91,6 +91,15 @@ function M.setup()
 		size = { 1340, 1000 },
 		center = true,
 	})
+
+	hl.window_rule({
+		name = "float and center open folder",
+		match = { title = ".*Open.*" },
+		float = true,
+		size = { 1200, 800 },
+		center = true,
+	})
+
 	-- numbr calculator — float, centre, and set a fixed size
 	hl.window_rule({
 		match = { class = "^(numbr)$" },

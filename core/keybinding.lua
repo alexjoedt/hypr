@@ -8,6 +8,12 @@ function M.setup(opts)
 	local menu = opts.menu or "wofi --show drun"
 	local mainMod = opts.mainMod or "SUPER"
 
+	hl.bind(
+		mainMod .. " + C",
+		hl.dsp.focus({ workspace = "name:Code" }),
+		{ description = "Switch to Code workspace" }
+	)
+
 	-- Example binds, see https://wiki.hypr.land/Configuring/Basics/Binds/ for more
 	hl.bind(mainMod .. " + Return", hl.dsp.exec_cmd(terminal), { description = "Terminal" })
 	hl.bind(mainMod .. " + Q", hl.dsp.window.close(), { description = "Close window" })
@@ -170,6 +176,7 @@ function M.setup(opts)
 		hl.dsp.window.move({ workspace = 10 }),
 		{ description = "Move window to workspace 10" }
 	)
+
 
 	-- Special workspace (scratchpad)
 	hl.bind(mainMod .. " + S", hl.dsp.workspace.toggle_special("magic"), { description = "Toggle scratchpad" })

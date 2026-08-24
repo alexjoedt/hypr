@@ -39,7 +39,7 @@ end
 -- testing live: the screen stayed off until `disabled = false` was passed
 -- alongside mode/position/scale).
 local function enable_edp1()
-	hl.monitor({ output = "eDP-1", disabled = false, mode = "preferred", position = "auto", scale = "auto" })
+	hl.monitor({ output = "eDP-1", disabled = false, mode = "1440x900@60.00Hz", position = "auto", scale = 1 })
 end
 
 local function disable_edp1(migrate_to)
@@ -74,8 +74,7 @@ function M.toggle_extend()
 	state.extend_laptop = not state.extend_laptop
 	apply_display_policy()
 
-	local msg = state.extend_laptop
-		and "Laptop screen: extended (both displays on)"
+	local msg = state.extend_laptop and "Laptop screen: extended (both displays on)"
 		or "Laptop screen: off when external connected"
 	hl.exec_cmd("notify-send 'Displays' '" .. msg .. "'")
 end

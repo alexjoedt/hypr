@@ -108,11 +108,22 @@ function M.setup()
 		center = true,
 	})
 
+	-- satty fallback (used by the screenshot binds when omasnap is absent)
 	hl.window_rule({
 		match = { class = "^(com\\.gabm\\.satty)$" },
 		float = true,
 		size = { 900, 640 },
 		center = true,
+	})
+
+	-- omasnap screenshot overlay and pins: layer-shell surfaces, so no window rule.
+	-- No animation so the overlay maps instantly, and hidden from screen sharing.
+	hl.layer_rule({
+		name = "omasnap",
+		match = { namespace = "^omasnap$" },
+		no_anim = true,
+		animation = "none",
+		no_screen_share = true,
 	})
 
 	hl.window_rule({

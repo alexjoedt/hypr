@@ -184,8 +184,8 @@ Default is EurKEY on a QWERTZ base ([eurkey_qwertz.xkb](eurkey_qwertz.xkb)). Tog
 
 | Shortcut | Action |
 |---|---|
-| `Print` | Screenshot whole screen → `~/Pictures/Screenshots/` |
-| `SUPER` + `Print` or `SUPER` + `SHIFT` + `P` | Select an area, annotate with `satty`, copy to clipboard + save |
+| `Print` | Screenshot whole screen → `~/Pictures/Screenshots/` (`omasnap`, or `grim` when it is not installed) |
+| `SUPER` + `Print` or `SUPER` + `SHIFT` + `P` | Select an area, annotate, copy to clipboard + save (`omasnap`, press again to dismiss; falls back to `grim` + `slurp` + `satty`) |
 | `SUPER` + `/` | Open interactive keybindings cheatsheet (walker) |
 
 ---

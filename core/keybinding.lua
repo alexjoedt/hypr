@@ -1,5 +1,19 @@
 local M = {}
 
+-- True when `name` is an executable on PATH or in ~/.local/bin. Checked once at
+-- config load, so switching tools needs a `hyprctl reload`.
+local function has_command(name)
+	local dirs = (os.getenv("PATH") or "") .. ":" .. (os.getenv("HOME") or "") .. "/.local/bin"
+	for dir in dirs:gmatch("[^:]+") do
+		local f = io.open(dir .. "/" .. name, "r")
+		if f then
+			f:close()
+			return true
+		end
+	end
+	return false
+end
+
 function M.setup(opts)
 	opts = opts or {}
 
@@ -66,28 +80,23 @@ function M.setup(opts)
 		{ description = "Return borrowed window" }
 	)
 
-	-- Screenshots (saved to ~/Pictures/Screenshots/)
+	-- Screenshots (saved to ~/Pictures/Screenshots/). omasnap when installed,
+	-- otherwise the grim + slurp + satty pipeline.
+	local fullscreen_cmd, region_cmd
+	if has_command("omasnap") then
+		-- Each bind toggles: the first press opens the overlay, the next press dismisses it.
+		-- Print saves directly and skips the editor; region capture copies and/or saves from the editor.
+		fullscreen_cmd = "omasnap --capture-fullscreen --save"
+		region_cmd = "omasnap --capture-region"
+	else
+		fullscreen_cmd = "mkdir -p ~/Pictures/Screenshots && grim ~/Pictures/Screenshots/$(date +%Y%m%d_%H%M%S).png"
+		region_cmd = 'mkdir -p ~/Pictures/Screenshots && grim -g "$(slurp)" - | satty -f - --copy-command wl-copy -o ~/Pictures/Screenshots/%Y%m%d_%H%M%S.png'
+	end
 	-- Print: grab the whole screen and save it directly
-	hl.bind(
-		"Print",
-		hl.dsp.exec_cmd("mkdir -p ~/Pictures/Screenshots && grim ~/Pictures/Screenshots/$(date +%Y%m%d_%H%M%S).png"),
-		{ description = "Screenshot (full screen)" }
-	)
-	-- Super + Print (or Super + Shift + P): select an area, annotate with satty, copy to clipboard and save
-	hl.bind(
-		mainMod .. " + Print",
-		hl.dsp.exec_cmd(
-			'mkdir -p ~/Pictures/Screenshots && grim -g "$(slurp)" - | satty -f - --copy-command wl-copy -o ~/Pictures/Screenshots/%Y%m%d_%H%M%S.png'
-		),
-		{ description = "Screenshot (select area + annotate)" }
-	)
-	hl.bind(
-		mainMod .. " + SHIFT + P",
-		hl.dsp.exec_cmd(
-			'mkdir -p ~/Pictures/Screenshots && grim -g "$(slurp)" - | satty -f - --copy-command wl-copy -o ~/Pictures/Screenshots/%Y%m%d_%H%M%S.png'
-		),
-		{ description = "Screenshot (select area + annotate)" }
-	)
+	hl.bind("Print", hl.dsp.exec_cmd(fullscreen_cmd), { description = "Screenshot (full screen)" })
+	-- Super + Print (or Super + Shift + P): select an area, annotate, copy to clipboard and save
+	hl.bind(mainMod .. " + Print", hl.dsp.exec_cmd(region_cmd), { description = "Screenshot (select area + annotate)" })
+	hl.bind(mainMod .. " + SHIFT + P", hl.dsp.exec_cmd(region_cmd), { description = "Screenshot (select area + annotate)" })
 
 	-- Walker launcher (elephant window provider)
 	hl.bind("CTRL + SPACE", hl.dsp.exec_cmd("walker --provider windows"), { description = "Walker (windows)" })

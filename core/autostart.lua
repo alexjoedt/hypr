@@ -14,7 +14,12 @@ function M.setup()
 		hl.exec_cmd("qs -c noctalia-shell")
 		--hl.exec_cmd("noctalia")
 		hl.exec_cmd("hypridle -q")
-		hl.exec_cmd("systemctl --user restart elephant")
+		-- Firefox/libwebrtc braucht XDG_SESSION_TYPE=wayland fuer PipeWire-Screensharing.
+		-- hl.env setzt Variablen nur im Hyprland-Prozess; elephant laeuft als systemd
+		-- user service und braucht sie aus der systemd user environment. Import vor
+		-- dem Restart verketten, damit elephant sie sicher erbt.
+		hl.exec_cmd(
+			'sh -c "dbus-update-activation-environment --systemd XDG_SESSION_TYPE XDG_SESSION_DESKTOP MOZ_ENABLE_WAYLAND && systemctl --user restart elephant"')
 	end)
 end
 

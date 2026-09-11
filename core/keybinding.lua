@@ -105,6 +105,11 @@ function M.setup(opts)
 		description = "Walker (clipboard)",
 	})
 
+	-- Wallpaper picker (quickshell, see ~/.config/quickshell/docs/wallpaper.md)
+	hl.bind(mainMod .. " + SHIFT + W", hl.dsp.exec_cmd("qs ipc call wallpaper toggle"), {
+		description = "Wallpaper picker",
+	})
+
 	-- Launch numbr with Super+Shift+N
 	hl.bind(mainMod .. " + SHIFT + N", hl.dsp.exec_cmd("numbr"), { description = "Calculator" })
 

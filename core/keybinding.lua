@@ -22,14 +22,15 @@ function M.setup(opts)
 	local menu = opts.menu or "wofi --show drun"
 	local mainMod = opts.mainMod or "SUPER"
 
-	hl.bind(
-		mainMod .. " + C",
-		hl.dsp.focus({ workspace = "name:Code" }),
-		{ description = "Switch to Code workspace" }
-	)
+	hl.bind(mainMod .. " + C", hl.dsp.focus({ workspace = "name:Code" }), { description = "Switch to Code workspace" })
 
 	-- Example binds, see https://wiki.hypr.land/Configuring/Basics/Binds/ for more
 	hl.bind(mainMod .. " + Return", hl.dsp.exec_cmd(terminal), { description = "Terminal" })
+	hl.bind(
+		mainMod .. " + SHIFT + Return",
+		hl.dsp.exec_cmd("alacritty --class terminal -e tmux new-session -A -s main"),
+		{ description = "Alternate Terminal" }
+	)
 	hl.bind(mainMod .. " + Q", hl.dsp.window.close(), { description = "Close window" })
 	hl.bind(mainMod .. " + M", hl.dsp.exit(), { description = "Exit Hyprland" })
 	hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(fileManager), { description = "File manager" })
@@ -90,13 +91,18 @@ function M.setup(opts)
 		region_cmd = "omasnap --capture-region"
 	else
 		fullscreen_cmd = "mkdir -p ~/Pictures/Screenshots && grim ~/Pictures/Screenshots/$(date +%Y%m%d_%H%M%S).png"
-		region_cmd = 'mkdir -p ~/Pictures/Screenshots && grim -g "$(slurp)" - | satty -f - --copy-command wl-copy -o ~/Pictures/Screenshots/%Y%m%d_%H%M%S.png'
+		region_cmd =
+			'mkdir -p ~/Pictures/Screenshots && grim -g "$(slurp)" - | satty -f - --copy-command wl-copy -o ~/Pictures/Screenshots/%Y%m%d_%H%M%S.png'
 	end
 	-- Print: grab the whole screen and save it directly
 	hl.bind("Print", hl.dsp.exec_cmd(fullscreen_cmd), { description = "Screenshot (full screen)" })
 	-- Super + Print (or Super + Shift + P): select an area, annotate, copy to clipboard and save
 	hl.bind(mainMod .. " + Print", hl.dsp.exec_cmd(region_cmd), { description = "Screenshot (select area + annotate)" })
-	hl.bind(mainMod .. " + SHIFT + P", hl.dsp.exec_cmd(region_cmd), { description = "Screenshot (select area + annotate)" })
+	hl.bind(
+		mainMod .. " + SHIFT + P",
+		hl.dsp.exec_cmd(region_cmd),
+		{ description = "Screenshot (select area + annotate)" }
+	)
 
 	-- Walker launcher (elephant window provider)
 	hl.bind("CTRL + SPACE", hl.dsp.exec_cmd("walker --provider windows"), { description = "Walker (windows)" })
@@ -190,7 +196,6 @@ function M.setup(opts)
 		hl.dsp.window.move({ workspace = 10 }),
 		{ description = "Move window to workspace 10" }
 	)
-
 
 	-- Special workspace (scratchpad)
 	hl.bind(mainMod .. " + S", hl.dsp.workspace.toggle_special("magic"), { description = "Toggle scratchpad" })

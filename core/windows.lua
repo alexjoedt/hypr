@@ -74,6 +74,9 @@ function M.setup()
 	-- WezTerm — enable blur behind the transparent window.
 	hl.layer_rule({ match = { namespace = "^(org.wezfurlong.wezterm|wezterm.*)$" }, blur = true })
 
+	-- Alactritty
+	hl.layer_rule({ match = { namespace = "^Alacritty.*" }, blur = true })
+
 	-- File managers — always float regardless of their default tile hint.
 	-- See https://wiki.hypr.land/Configuring/Basics/Window-Rules/
 	local file_managers = { "thunar", "dolphin", "nemo", "pcmanfm", "spacefm", "caja" }

@@ -6,7 +6,7 @@ local OPTIONS = "caps:escape"
 
 -- In-memory; resets to eurkey on Hyprland restart / config reload.
 local state = {
-	layout = "eurkey",
+	layout = "de", -- "eurkey"
 }
 
 local function apply_eurkey()

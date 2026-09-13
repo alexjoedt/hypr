@@ -33,11 +33,11 @@ function M.toggle()
 	if state.layout == "eurkey" then
 		state.layout = "de"
 		apply_de()
-		hl.exec_cmd("notify-send 'Keyboard' 'Layout: de (German)'")
+		--hl.exec_cmd("notify-send 'Keyboard' 'Layout: de (German)'")
 	else
 		state.layout = "eurkey"
 		apply_eurkey()
-		hl.exec_cmd("notify-send 'Keyboard' 'Layout: EurKEY QWERTZ'")
+		--hl.exec_cmd("notify-send 'Keyboard' 'Layout: EurKEY QWERTZ'")
 	end
 end
 

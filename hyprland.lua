@@ -16,7 +16,6 @@
 -- Create your files separately and then require them like this:
 -- require("myColors")
 
-
 ----------------
 -- CORE LOAD  --
 ----------------
@@ -28,7 +27,6 @@ require("core.environment").setup()
 require("core.visual").setup()
 require("core.input").setup()
 require("core.monitors").setup()
-
 
 -------------------
 -- PERMISSIONS   --
@@ -46,10 +44,9 @@ require("core.monitors").setup()
 
 -- hl.permission("/usr/(bin|local/bin)/grim", "screencopy", "allow")
 -- hl.permission("/usr/(lib|libexec|lib64)/xdg-desktop-portal-hyprland", "screencopy", "allow")
--- hl.permission("/usr/(bin|local/bin)/hyprpm", "plugin", "allow")
+hl.permission("/usr/(bin|local/bin)/hyprpm", "plugin", "allow")
 
 require("core.windows").setup()
-
 
 -------------------
 -- KEYBINDINGS   --
@@ -59,14 +56,14 @@ require("core.windows").setup()
 local mainMod = "SUPER"
 
 require("core.keybinding").setup({
-    terminal = programs.terminal,
-    fileManager = programs.fileManager,
-    menu = programs.menu,
-    mainMod = mainMod, -- Sets "Windows" key as main modifier
+	terminal = programs.terminal,
+	fileManager = programs.fileManager,
+	menu = programs.menu,
+	mainMod = mainMod, -- Sets "Windows" key as main modifier
 })
 
 require("core.apps").setup({
-    mainMod = mainMod,
+	mainMod = mainMod,
 })
 
 -----------------

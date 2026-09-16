@@ -26,11 +26,11 @@ function M.setup(opts)
 
 	-- Example binds, see https://wiki.hypr.land/Configuring/Basics/Binds/ for more
 	hl.bind(mainMod .. " + Return", hl.dsp.exec_cmd(terminal), { description = "Terminal" })
-	hl.bind(
-		mainMod .. " + SHIFT + Return",
-		hl.dsp.exec_cmd("alacritty --class terminal -e tmux new-session -A -s main"),
-		{ description = "Alternate Terminal" }
-	)
+	--hl.bind(
+	--	mainMod .. " + SHIFT + Return",
+	--	hl.dsp.exec_cmd("alacritty --class terminal -e tmux new-session -A -s main"),
+	--	{ description = "Alternate Terminal" }
+	--)
 	hl.bind(mainMod .. " + Q", hl.dsp.window.close(), { description = "Close window" })
 	hl.bind(mainMod .. " + M", hl.dsp.exit(), { description = "Exit Hyprland" })
 	hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(fileManager), { description = "File manager" })

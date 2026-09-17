@@ -116,6 +116,11 @@ function M.setup(opts)
 		description = "Wallpaper picker",
 	})
 
+	-- hwm repository launcher (quickshell plugin, see ~/.config/quickshell/plugins/hwm)
+	hl.bind(mainMod .. " + SHIFT + Space", hl.dsp.exec_cmd("qs ipc call plugins overlay hwm toggle"), {
+		description = "hwm launcher",
+	})
+
 	-- Launch numbr with Super+Shift+N
 	hl.bind(mainMod .. " + SHIFT + N", hl.dsp.exec_cmd("numbr"), { description = "Calculator" })
 

@@ -25,7 +25,7 @@ local function single_window_gaps(m)
 		-- Ultrawide (≥21:9) or large 4K — push the window into a centred column.
 		-- 13 % of logical width per side keeps the window at ~74 % of the screen.
 		-- Raise the multiplier (e.g. 0.18) for an even narrower column.
-		local h_gap = math.floor(lw * 0.23)
+		local h_gap = math.floor(lw * 0.13)
 		return { top = 20, right = h_gap, bottom = 20, left = h_gap }
 	elseif lw > 1920 then
 		-- 1440p / QHD

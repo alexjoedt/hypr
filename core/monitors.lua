@@ -25,7 +25,7 @@ end
 
 local function migrate_workspaces_off_edp1(target_name)
 	for _, ws in ipairs(hl.get_workspaces()) do
-		if ws.monitor == "eDP-1" then
+		if ws.monitor and ws.monitor.name == "eDP-1" then
 			hl.dispatch(hl.dsp.workspace.move({ workspace = ws.id, monitor = target_name }))
 		end
 	end
@@ -47,6 +47,15 @@ local function disable_edp1(migrate_to)
 		migrate_workspaces_off_edp1(migrate_to)
 	end
 	hl.monitor({ output = "eDP-1", disabled = true })
+end
+
+-- Per-workspace state that depends on the monitor size goes stale when a
+-- workspace ends up on a different display: focus-mode side gaps and
+-- floating window geometry. Reset both for every workspace; both calls
+-- are no-ops for workspaces that are not affected.
+local function on_layout_changed()
+	require("core.focus").reset_all()
+	require("core.float").fit_all()
 end
 
 -- Re-evaluate and apply the current display policy. Safe to call repeatedly
@@ -97,11 +106,20 @@ function M.setup()
 		if mon.name ~= "eDP-1" then
 			apply_display_policy()
 		end
+		on_layout_changed()
 	end)
 	hl.on("monitor.removed", function(mon)
 		if mon.name ~= "eDP-1" then
 			apply_display_policy()
 		end
+		on_layout_changed()
+	end)
+
+	-- Fires once per workspace that lands on another display (Hyprland's own
+	-- migration on unplug as well as migrate_workspaces_off_edp1 above).
+	hl.on("workspace.move_to_monitor", function(ws)
+		require("core.focus").reset(ws.id)
+		require("core.float").fit_workspace(ws)
 	end)
 
 	-- Lid closed: the panel is physically covered either way, so always

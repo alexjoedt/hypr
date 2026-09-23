@@ -3,6 +3,7 @@ local M = {}
 
 local focused = {}            -- workspace id -> true while focus mode is on
 local DEFAULT_GAPS_OUT = 20   -- keep in sync with general.gaps_out in core/visual.lua
+local LAPTOP_MONITOR  = "eDP-1"  -- too narrow (1440px) for centering to be useful
 
 -- fraction of monitor width the content should occupy
 local WIDTH_ONE = 0.5         -- single window: 50% wide, centered
@@ -17,8 +18,13 @@ function M.toggle()
 
     -- toggle OFF: restore default gaps for this workspace only
     if focused[id] then
-        hl.workspace_rule({ workspace = tostring(id), gaps_out = DEFAULT_GAPS_OUT })
-        focused[id] = nil
+        M.reset(id)
+        return
+    end
+
+    if mon.name == LAPTOP_MONITOR then
+        hl.dispatch(hl.dsp.exec_cmd(
+            "notify-send 'Focus mode' 'Not available on the laptop screen'"))
         return
     end
 
@@ -47,6 +53,22 @@ function M.toggle()
         gaps_out  = { top = 20, right = side, bottom = 20, left = side },
     })
     focused[id] = true
+end
+
+-- Leave focus mode on one workspace (no-op if it is not in focus mode).
+function M.reset(id)
+    if not focused[id] then return end
+    hl.workspace_rule({ workspace = tostring(id), gaps_out = DEFAULT_GAPS_OUT })
+    focused[id] = nil
+end
+
+-- Leave focus mode everywhere. Used when the monitor layout changes: the
+-- side gaps were computed for the monitor the workspace was on at toggle
+-- time and are wrong once it lands on a different-sized display.
+function M.reset_all()
+    for id in pairs(focused) do
+        M.reset(id)
+    end
 end
 
 return M

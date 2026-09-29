@@ -148,7 +148,6 @@ function M.setup(opts)
 		hl.dsp.window.swap({ direction = "right" }),
 		{ description = "Swap window right" }
 	)
-	hl.bind(mainMod .. " + SHIFT + K", hl.dsp.window.swap({ direction = "up" }), { description = "Swap window up" })
 	hl.bind(mainMod .. " + SHIFT + J", hl.dsp.window.swap({ direction = "down" }), { description = "Swap window down" })
 	hl.bind(
 		mainMod .. " + SHIFT + left",

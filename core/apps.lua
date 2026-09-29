@@ -131,6 +131,38 @@ function M.startOrFocus(appName, workspace, key)
 	end, { description = description })
 end
 
+function M.toggleBlockpad()
+	local spec = resolveSpec("blockpad")
+	local win = findWindow(spec)
+
+	if not win or not win.address then
+		hl.dispatch(hl.dsp.exec_cmd(spec.cmd))
+		return
+	end
+
+	local sel = "address:" .. win.address
+	local pinned = win.pinned
+	local active = hl.get_active_window()
+	local focused = active ~= nil and active.address == win.address
+
+	if pinned and focused then
+		hl.dispatch(hl.dsp.window.close({ window = sel }))
+		return
+	end
+
+	if not pinned then
+		local ws = hl.get_active_workspace()
+		if ws then
+			hl.dispatch(hl.dsp.window.move({ workspace = ws.id, window = sel, follow = false }))
+		end
+		hl.dispatch(hl.dsp.window.float({ action = "set", window = sel }))
+		hl.dispatch(hl.dsp.window.pin({ window = sel }))
+	end
+
+	hl.dispatch(hl.dsp.focus({ window = sel }))
+	hl.dispatch(hl.dsp.window.bring_to_top())
+end
+
 function M.setup(opts)
 	opts = opts or {}
 
@@ -140,7 +172,7 @@ function M.setup(opts)
 	M.startOrFocus("firefox", 1, "f")
 	M.startOrFocus("zed", 2, "z")
 	M.startOrFocus("obsidian", 9, "n")
-	M.startOrFocus("blockpad", "special:magic", "SHIFT + K")
+	hl.bind(state.mainMod .. " + SHIFT + K", M.toggleBlockpad, { description = "Toggle blockpad (float + pin)" })
 	M.startOrFocus("scratchterm", "special:magic", "SHIFT + T")
 end
 

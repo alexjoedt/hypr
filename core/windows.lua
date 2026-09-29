@@ -132,6 +132,7 @@ function M.setup()
 	hl.window_rule({
 		match = { class = "^(blockpad)$" },
 		float = true,
+		pin = true,
 		size = { 900, 640 },
 		center = true,
 	})

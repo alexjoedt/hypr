@@ -1,25 +1,21 @@
--- core/layout_toggle/init.lua — toggle workspace 1 between dwindle and scrolling
+-- core/layout_toggle/init.lua — toggle the active workspace between dwindle and scrolling
 local M = {}
 
-local WS = "1"
 local LAYOUTS = { dwindle = "scrolling", scrolling = "dwindle" }
 
-local function workspace_1()
-	for _, ws in ipairs(hl.get_workspaces() or {}) do
-		if tostring(ws.id) == WS or tostring(ws.name) == WS then
-			return ws
-		end
+function M.toggle()
+	local ws = hl.get_active_workspace()
+	if not ws then
+		return
 	end
-	return nil
-end
 
-function M.toggle_ws1()
-	local ws = workspace_1()
-	local current = (ws and ws.tiled_layout) or "dwindle"
+	local current = ws.tiled_layout or "dwindle"
 	local next_layout = LAYOUTS[current] or "scrolling"
+	-- Special workspaces have negative ids; rules only match them by name.
+	local selector = ws.id > 0 and tostring(ws.id) or ws.name
 
-	hl.workspace_rule({ workspace = WS, layout = next_layout })
-	hl.dispatch(hl.dsp.exec_cmd("notify-send 'Workspace 1' 'Layout: " .. next_layout .. "'"))
+	hl.workspace_rule({ workspace = selector, layout = next_layout })
+	hl.dispatch(hl.dsp.exec_cmd("notify-send 'Workspace " .. ws.name .. "' 'Layout: " .. next_layout .. "'"))
 end
 
 return M

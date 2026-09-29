@@ -39,8 +39,8 @@ function M.setup(opts)
 	hl.bind(mainMod .. " + SHIFT + F", require("core.focus").toggle, { description = "Focus mode" }) -- focus mode: center 1-2 windows
 	hl.bind(
 		mainMod .. " + T",
-		require("core.layout_toggle").toggle_ws1,
-		{ description = "Toggle WS1 layout (dwindle/scrolling)" }
+		require("core.layout_toggle").toggle,
+		{ description = "Toggle workspace layout (dwindle/scrolling)" }
 	)
 	hl.bind(mainMod .. " + Space", hl.dsp.exec_cmd(menu), { description = "App launcher" })
 	--hl.bind(mainMod .. " + P",         hl.dsp.window.pseudo(),        { description = "Toggle pseudo-tile"     }) -- dwindle
@@ -51,7 +51,7 @@ function M.setup(opts)
 	end, { description = "Workspace overview" }) -- workspace overview (scroll overview)
 
 	-- Lock screen (hypridle lock_cmd → single hyprlock instance)
-	hl.bind(mainMod .. " + SHIFT + L", hl.dsp.exec_cmd("loginctl lock-session"), {
+	hl.bind(mainMod .. " + ALT + L", hl.dsp.exec_cmd("loginctl lock-session"), {
 		description = "Lock screen",
 	})
 

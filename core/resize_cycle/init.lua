@@ -35,65 +35,73 @@ local function _tiled_count(ws_name)
 	return n
 end
 
-function M.cycle()
-	local win = hl.get_active_window()
-	if not win then
-		return
-	end
-
-	local mon = hl.get_active_monitor()
-	if not mon then
-		return
-	end
-
-	local addr = win.address
-	local idx = (_state[addr] or 0) % #_sizes + 1
-	_state[addr] = idx
-	local size = _sizes[idx]
-
-	-- Width-only toggle: keep the window's current height untouched.
-	local h = win.size and win.size.y or math.floor(mon.height / mon.scale)
+-- Full width keeps the default gaps_out on the left and right. Returns false
+-- when the size can't be applied (full width in dwindle with siblings).
+local function _apply(win, mon, size)
+	local mon_w = math.floor(mon.width / mon.scale)
+	local gap = (hl.get_config("general.gaps_out") or {}).left or 0
 
 	if win.floating then
-		-- if size == "reset" then return end -- no-op, next press continues the cycle
-		local w = math.floor(mon.width / mon.scale * size)
+		-- Width-only toggle: keep the window's current height untouched.
+		local h = win.size and win.size.y or math.floor(mon.height / mon.scale)
+		local w = size == 1 and mon_w - 2 * gap or math.floor(mon_w * size)
 		hl.dispatch(hl.dsp.window.resize({ x = w, y = h }))
 		hl.dispatch(hl.dsp.window.center({}))
-		return
+		return true
 	end
 
 	local ws = hl.get_active_workspace()
 	local layout = ws and ws.tiled_layout or "dwindle"
 
 	if layout == "scrolling" then
-		if size == 1 then
-			hl.dispatch(hl.dsp.layout("colresize 1.0"))
-		else
-			hl.dispatch(hl.dsp.layout("colresize " .. size))
-		end
-		return
+		hl.dispatch(hl.dsp.layout("colresize " .. (size == 1 and "1.0" or size)))
+		return true
 	end
 
 	if ws and _tiled_count(ws.name) <= 1 then
 		-- Solo tiled window: no sibling to resize against, so emulate
 		-- the target width via the workspace's gaps_out instead.
 		local base = require("core.windows").single_window_gaps(mon)
-		if size == 1 then
-			hl.workspace_rule({ workspace = ws.name, gaps_out = base })
-		else
-			local target_w = math.floor(mon.width / mon.scale * size)
-			local side_gap = math.floor((mon.width / mon.scale - target_w) / 2)
-			hl.workspace_rule({
-				workspace = ws.name,
-				gaps_out = { top = base.top, right = side_gap, bottom = base.bottom, left = side_gap },
-			})
-		end
-	else
-		if size == 1 then
-			return
-		end
-		local w = math.floor(mon.width / mon.scale * size)
-		hl.dispatch(hl.dsp.window.resize({ x = w, y = h }))
+		local side_gap = size == 1 and gap or math.floor((mon_w - math.floor(mon_w * size)) / 2)
+		hl.workspace_rule({
+			workspace = ws.name,
+			gaps_out = { top = base.top, right = side_gap, bottom = base.bottom, left = side_gap },
+		})
+		return true
+	end
+
+	if size == 1 then
+		return false
+	end
+	local h = win.size and win.size.y or math.floor(mon.height / mon.scale)
+	hl.dispatch(hl.dsp.window.resize({ x = math.floor(mon_w * size), y = h }))
+	return true
+end
+
+function M.cycle()
+	local win = hl.get_active_window()
+	local mon = hl.get_active_monitor()
+	if not win or not mon then
+		return
+	end
+
+	local idx = (_state[win.address] or 0) % #_sizes + 1
+	_state[win.address] = idx
+	_apply(win, mon, _sizes[idx])
+end
+
+-- SUPER + ALT + F: jump straight to full width. Dwindle with siblings has no
+-- full-width split, so it toggles maximize instead.
+function M.full_width()
+	local win = hl.get_active_window()
+	local mon = hl.get_active_monitor()
+	if not win or not mon then
+		return
+	end
+
+	_state[win.address] = 1
+	if not _apply(win, mon, 1) then
+		hl.dispatch(hl.dsp.window.fullscreen({ mode = "maximized", action = "toggle" }))
 	end
 end
 

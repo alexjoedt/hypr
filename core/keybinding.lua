@@ -229,6 +229,11 @@ function M.setup(opts)
 		require("core.resize_cycle").cycle,
 		{ description = "Cycle window size (¾ → ⅔ → ½ → ⅓ → ¼ → reset)" }
 	)
+	hl.bind(
+		mainMod .. " + ALT + F",
+		require("core.resize_cycle").full_width,
+		{ description = "Full width window" }
+	)
 
 	hl.bind(mainMod .. " + comma", hl.dsp.layout("consume_or_expel prev"))
 	hl.bind(mainMod .. " + period", hl.dsp.layout("consume_or_expel next"))

@@ -231,15 +231,21 @@ function M.setup(opts)
 	hl.bind(mainMod .. " + mouse:272", hl.dsp.window.drag(), { mouse = true, description = "Move window (drag)" })
 	hl.bind(mainMod .. " + mouse:273", hl.dsp.window.resize(), { mouse = true, description = "Resize window (drag)" })
 
-	-- Cycle window size: SUPER + R → ¾ → ⅔ → ½ → ⅓ → ¼ → reset (core/resize_cycle)
-	hl.bind(
-		mainMod .. " + R",
-		require("core.resize_cycle").cycle,
-		{ description = "Cycle window size (¾ → ⅔ → ½ → ⅓ → ¼ → reset)" }
-	)
+	-- Resize mode: hold SUPER, tap R, then SUPER + arrows; releasing SUPER exits (core/resize_cycle)
+	local resize = require("core.resize_cycle")
+	hl.bind(mainMod .. " + R", hl.dsp.submap("resize"), { description = "Resize mode (hold SUPER + arrows)" })
+	hl.define_submap("resize", function()
+		hl.bind(mainMod .. " + left", resize.shrink, { description = "Resize: smaller" })
+		hl.bind(mainMod .. " + right", resize.grow, { description = "Resize: larger / maximize (solo)" })
+		hl.bind(mainMod .. " + up", resize.max, { description = "Resize: max width" })
+		hl.bind(mainMod .. " + down", resize.center, { description = "Resize: center 50% (solo)" })
+		hl.bind("SUPER + SUPER_L", hl.dsp.submap("reset"), { release = true })
+		hl.bind("SUPER + SUPER_R", hl.dsp.submap("reset"), { release = true })
+		hl.bind("escape", hl.dsp.submap("reset"))
+	end)
 	hl.bind(
 		mainMod .. " + ALT + F",
-		require("core.resize_cycle").full_width,
+		resize.full_width,
 		{ description = "Full width window" }
 	)
 

@@ -1,5 +1,11 @@
--- core/resize_cycle/init.lua — cycle window size: SUPER + R → ¾ → ⅔ → ½ → ⅓ → ¼ → reset (full tile) → ¾ …
+-- core/resize_cycle/init.lua — step window width: SUPER + R, then SUPER + arrows (resize submap)
+--   left  → one step smaller (⅓ min)
+--   right → one step larger (full width max; a solo tiled window then maximizes)
+--   up    → jump to max width
+--   down  → solo tiled window: centered 50% column (core/focus)
 -- Resizes the active window in-place without changing its floating state.
+-- The current step is derived from the window's actual width on every call,
+-- so mouse resizes and monitor moves never leave stale state behind.
 --
 -- Tiled windows need layout-specific handling:
 --   - dwindle: a plain resize adjusts the split ratio with the sibling
@@ -15,8 +21,9 @@
 --     required so a solo column can actually shrink).
 local M = {}
 
-local _sizes = { 1, 0.667, 0.5, 0.33 }
-local _state = {} -- [window_address] = current_index
+local _sizes = { 0.33, 0.5, 0.667, 1 }
+local _eps = 0.03 -- gaps make a "full width" window slightly narrower than the monitor
+local _solo_rules = {} -- [workspace name] = gaps_out rule handle of the last solo step
 
 -- Count tiled (non-floating) windows on the given workspace name.
 local function _tiled_count(ws_name)
@@ -35,10 +42,41 @@ local function _tiled_count(ws_name)
 	return n
 end
 
+local function _is_solo(win)
+	if win.floating then
+		return false
+	end
+	local ws = hl.get_active_workspace()
+	return ws ~= nil and _tiled_count(ws.name) <= 1
+end
+
+-- Selector for "this workspace while it has exactly one tiled window", so a
+-- narrowed solo width doesn't squeeze windows opened next to it later.
+-- Named workspaces have negative ids, so match those by name instead.
+local function _solo_selector(ws)
+	if ws.id > 0 then
+		return "r[" .. ws.id .. "-" .. ws.id .. "] w[t1]"
+	end
+	return "n[s:" .. ws.name .. "] n[e:" .. ws.name .. "] w[t1]"
+end
+
+local function _is_maximized(win)
+	return (win.fullscreen or 0) ~= 0
+end
+
+local function _unmaximize()
+	hl.dispatch(hl.dsp.window.fullscreen({ mode = "maximized", action = "unset" }))
+end
+
+local function _current_fraction(win, mon)
+	local usable = require("core.windows").usable_width(mon)
+	return (win.size and win.size.x or usable) / usable
+end
+
 -- Full width keeps the default gaps_out on the left and right. Returns false
 -- when the size can't be applied (full width in dwindle with siblings).
 local function _apply(win, mon, size)
-	local mon_w = math.floor(mon.width / mon.scale)
+	local mon_w = require("core.windows").usable_width(mon)
 	local gap = (hl.get_config("general.gaps_out") or {}).left or 0
 
 	if win.floating then
@@ -61,10 +99,14 @@ local function _apply(win, mon, size)
 	if ws and _tiled_count(ws.name) <= 1 then
 		-- Solo tiled window: no sibling to resize against, so emulate
 		-- the target width via the workspace's gaps_out instead.
+		require("core.focus").reset(ws.id)
 		local base = require("core.windows").single_window_gaps(mon)
 		local side_gap = size == 1 and gap or math.floor((mon_w - math.floor(mon_w * size)) / 2)
-		hl.workspace_rule({
-			workspace = ws.name,
+		if _solo_rules[ws.name] then
+			_solo_rules[ws.name]:set_enabled(false)
+		end
+		_solo_rules[ws.name] = hl.workspace_rule({
+			workspace = _solo_selector(ws),
 			gaps_out = { top = base.top, right = side_gap, bottom = base.bottom, left = side_gap },
 		})
 		return true
@@ -78,28 +120,82 @@ local function _apply(win, mon, size)
 	return true
 end
 
-function M.cycle()
+local function _active()
 	local win = hl.get_active_window()
 	local mon = hl.get_active_monitor()
 	if not win or not mon then
+		return nil
+	end
+	return win, mon
+end
+
+function M.grow()
+	local win, mon = _active()
+	if not win or _is_maximized(win) then
 		return
 	end
 
-	local idx = (_state[win.address] or 0) % #_sizes + 1
-	_state[win.address] = idx
-	_apply(win, mon, _sizes[idx])
+	local cur = _current_fraction(win, mon)
+	for _, size in ipairs(_sizes) do
+		if size > cur + _eps then
+			_apply(win, mon, size)
+			return
+		end
+	end
+
+	if _is_solo(win) then
+		hl.dispatch(hl.dsp.window.fullscreen({ mode = "maximized", action = "set" }))
+	end
+end
+
+function M.shrink()
+	local win, mon = _active()
+	if not win then
+		return
+	end
+	if _is_maximized(win) then
+		_unmaximize()
+		return
+	end
+
+	local cur = _current_fraction(win, mon)
+	for i = #_sizes, 1, -1 do
+		if _sizes[i] < cur - _eps then
+			_apply(win, mon, _sizes[i])
+			return
+		end
+	end
+end
+
+function M.max()
+	local win, mon = _active()
+	if not win or _is_maximized(win) then
+		return
+	end
+	if not _apply(win, mon, 1) then
+		_apply(win, mon, _sizes[#_sizes - 1])
+	end
+end
+
+function M.center()
+	local win = _active()
+	if not win or not _is_solo(win) then
+		return
+	end
+	if _is_maximized(win) then
+		_unmaximize()
+	end
+	require("core.focus").enable()
 end
 
 -- SUPER + ALT + F: jump straight to full width. Dwindle with siblings has no
 -- full-width split, so it toggles maximize instead.
 function M.full_width()
-	local win = hl.get_active_window()
-	local mon = hl.get_active_monitor()
-	if not win or not mon then
+	local win, mon = _active()
+	if not win then
 		return
 	end
 
-	_state[win.address] = 1
 	if not _apply(win, mon, 1) then
 		hl.dispatch(hl.dsp.window.fullscreen({ mode = "maximized", action = "toggle" }))
 	end

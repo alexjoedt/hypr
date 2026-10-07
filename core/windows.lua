@@ -1,12 +1,15 @@
 local M = {}
 
--- Exposed so other modules (e.g. core/resize_cycle's Super+R size-cycle
--- toggle) can reuse the same monitor-aware gap calculation to emulate
+-- Exposed so other modules (e.g. core/resize_cycle's Super+R resize mode)
+-- can reuse the same monitor-aware gap calculation to emulate
 -- resizing a lone tiled window (dwindle has no sibling split to resize
 -- against when a window is alone on its workspace).
 
 -- ─── Single-window auto-centering (resolution-aware) ─────────────────────────
--- Gaps are computed from each monitor's *logical* width (physical px ÷ scale).
+-- Gaps are computed from each monitor's usable *logical* width (physical px ÷
+-- scale, minus layer-shell reservations such as the pinned quickshell sidebar).
+-- Hyprland adds the reserved area on top of gaps_out, so the window stays
+-- centered in the free space.
 -- Thresholds and multipliers can be freely adjusted here.
 --
 -- Workspace selector breakdown:
@@ -17,9 +20,14 @@ local M = {}
 -- a second window appears — normal multi-window gaps are never affected.
 -- See https://wiki.hypr.land/Configuring/Basics/Workspace-Rules/#workspace-selectors
 
+-- Logical width accounts for HiDPI: a 4K screen scaled ×2 behaves like 1920px.
+function M.usable_width(m)
+	local r = m.reserved or {}
+	return math.floor(m.width / (m.scale or 1) - (r.left or 0) - (r.right or 0))
+end
+
 local function single_window_gaps(m)
-	-- Logical width accounts for HiDPI: a 4K screen scaled ×2 behaves like 1920px.
-	local lw = m.width / (m.scale or 1)
+	local lw = M.usable_width(m)
 
 	if lw > 2560 then
 		-- Ultrawide (≥21:9) or large 4K — push the window into a centred column.

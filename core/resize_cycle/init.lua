@@ -73,6 +73,16 @@ local function _current_fraction(win, mon)
 	return (win.size and win.size.x or usable) / usable
 end
 
+-- Right edge of the usable area, within gaps_out + border + a little slack.
+local function _touches_right_edge(win, mon, gap)
+	if not win.at then
+		return false
+	end
+	local r = mon.reserved or {}
+	local area_right = (mon.x or 0) + mon.width / mon.scale - (r.right or 0)
+	return area_right - (win.at.x + win.size.x) <= gap + 10
+end
+
 -- Full width keeps the default gaps_out on the left and right. Returns false
 -- when the size can't be applied (full width in dwindle with siblings).
 local function _apply(win, mon, size)
@@ -115,8 +125,16 @@ local function _apply(win, mon, size)
 	if size == 1 then
 		return false
 	end
+	local target = math.floor(mon_w * size)
+	if win.size and _touches_right_edge(win, mon, gap) then
+		-- Dwindle reads a resize as "move an edge by delta x", positive to the
+		-- right. A window on the right edge can only move its left edge, so an
+		-- exact (larger) size would shrink it; flip the delta instead.
+		hl.dispatch(hl.dsp.window.resize({ x = win.size.x - target, y = 0, relative = true }))
+		return true
+	end
 	local h = win.size and win.size.y or math.floor(mon.height / mon.scale)
-	hl.dispatch(hl.dsp.window.resize({ x = math.floor(mon_w * size), y = h }))
+	hl.dispatch(hl.dsp.window.resize({ x = target, y = h }))
 	return true
 end
 

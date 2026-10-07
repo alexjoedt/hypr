@@ -121,6 +121,14 @@ function M.setup(opts)
 		description = "hwm launcher",
 	})
 
+	-- Sidebar with todos and quick notes (quickshell, prototype 09-01)
+	hl.bind(mainMod .. " + A", hl.dsp.exec_cmd("qs ipc call sidebar toggle"), {
+		description = "Sidebar",
+	})
+	hl.bind(mainMod .. " + SHIFT + A", hl.dsp.exec_cmd("qs ipc call sidebar pin"), {
+		description = "Sidebar pin",
+	})
+
 	-- Launch numbr with Super+Shift+N
 	hl.bind(mainMod .. " + SHIFT + N", hl.dsp.exec_cmd("numbr"), { description = "Calculator" })
 

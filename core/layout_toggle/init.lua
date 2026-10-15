@@ -11,8 +11,11 @@ function M.toggle()
 
 	local current = ws.tiled_layout or "dwindle"
 	local next_layout = LAYOUTS[current] or "scrolling"
-	-- Special workspaces have negative ids; rules only match them by name.
-	local selector = ws.id > 0 and tostring(ws.id) or ws.name
+	-- Named and special workspaces have negative ids; rules match them by name.
+	local selector = tostring(ws.id)
+	if ws.id <= 0 then
+		selector = ws.name:find("^special:") and ws.name or ("name:" .. ws.name)
+	end
 
 	hl.workspace_rule({ workspace = selector, layout = next_layout })
 	hl.dispatch(hl.dsp.exec_cmd("notify-send 'Workspace " .. ws.name .. "' 'Layout: " .. next_layout .. "'"))

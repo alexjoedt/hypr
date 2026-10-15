@@ -142,6 +142,7 @@ function M.toggleBlockpad()
 
 	local sel = "address:" .. win.address
 	local pinned = win.pinned
+	local floating = win.floating
 	local active = hl.get_active_window()
 	local focused = active ~= nil and active.address == win.address
 
@@ -155,7 +156,10 @@ function M.toggleBlockpad()
 		if ws then
 			hl.dispatch(hl.dsp.window.move({ workspace = ws.id, window = sel, follow = false }))
 		end
-		hl.dispatch(hl.dsp.window.float({ action = "set", window = sel }))
+		-- float "set" toggles an already floating window back to tiled (Hyprland 0.56.2)
+		if floating ~= true and floating ~= 1 then
+			hl.dispatch(hl.dsp.window.float({ action = "set", window = sel }))
+		end
 		hl.dispatch(hl.dsp.window.pin({ window = sel }))
 	end
 

@@ -55,8 +55,9 @@ function M.enable()
     local side  = math.floor(mon_w * (1 - frac) / 2)
 
     -- uniform gaps centered (horizontal + vertical)
+    local selector = id < 0 and ("name:" .. ws.name) or tostring(id)
     focused[id] = hl.workspace_rule({
-        workspace = tostring(id),
+        workspace = selector,
         gaps_out  = { top = 20, right = side, bottom = 20, left = side },
     })
 end

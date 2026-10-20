@@ -22,14 +22,24 @@ function M.setup()
     hl.env("XCURSOR_SIZE", "24")
     hl.env("HYPRCURSOR_SIZE", "24")
 
-    -- NVIDIA Wayland configuration (added by nvidia-installer)
-    -- Not needed on this machine (AMD GPU) — kept commented for reference
-    -- in case this config is ever reused on NVIDIA hardware.
-    -- hl.env("LIBVA_DRIVER_NAME", "nvidia")
-    -- hl.env("GBM_BACKEND", "nvidia-drm")
-    -- hl.env("__GLX_VENDOR_LIBRARY_NAME", "nvidia")
-    -- hl.env("NVD_BACKEND", "direct")
-    -- hl.config({ cursor = { no_hardware_cursors = true } }) -- NVIDIA hw cursor workaround
+    -- GPU-dependent bits. This config runs on an NVIDIA desktop and an AMD
+    -- laptop; core.host reads the actual driver from sysfs, so the same files
+    -- work on both. AMD needs nothing here.
+    local host = require("core.host")
+
+    if host.gpu == "nvidia" then
+        -- Proprietary driver only (wiki/Nvidia). GBM_BACKEND is obsolete.
+        hl.env("LIBVA_DRIVER_NAME", "nvidia")
+        hl.env("__GLX_VENDOR_LIBRARY_NAME", "nvidia")
+        hl.env("NVD_BACKEND", "direct") -- needs libva-nvidia-driver
+    end
+
+    if host.is_nvidia_card then
+        -- Hardware cursor planes flicker on nouveau and on some proprietary
+        -- setups. Software cursor costs nothing noticeable; drop this branch
+        -- if the proprietary driver ever handles it cleanly.
+        hl.config({ cursor = { no_hardware_cursors = true } })
+    end
     hl.env("XDG_CURRENT_DESKTOP", "Hyprland")
     hl.env("XDG_SESSION_TYPE", "wayland")
     hl.env("XDG_SESSION_DESKTOP", "Hyprland")

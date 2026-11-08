@@ -47,7 +47,9 @@ function M.setup(opts)
 	-- hl.bind(mainMod .. " + J",      hl.dsp.layout("togglesplit")) -- dwindle
 	hl.bind(mainMod .. " + minus", hl.dsp.layout("togglesplit"), { description = "Toggle split direction" }) -- dwindle: toggle vertical/horizontal split
 	hl.bind(mainMod .. " + SHIFT + O", function()
-		hl.plugin.scrolloverview.overview("toggle")
+		if hl.plugin and hl.plugin.scrolloverview then
+			hl.plugin.scrolloverview.overview("toggle")
+		end
 	end, { description = "Workspace overview" }) -- workspace overview (scroll overview)
 
 	-- Lock screen (hypridle lock_cmd → single hyprlock instance)
@@ -176,12 +178,12 @@ function M.setup(opts)
 
 	-- Alt + Tab: hypr-alt-tab plugin (live preview strip). Config in core/plugins.lua.
 	hl.bind("ALT + Tab", function()
-		if hl.plugin.alttab then
+		if hl.plugin and hl.plugin.alttab then
 			hl.plugin.alttab.next()
 		end
 	end, { description = "Alt+Tab: next (hypr-alt-tab)" })
 	hl.bind("ALT + SHIFT + Tab", function()
-		if hl.plugin.alttab then
+		if hl.plugin and hl.plugin.alttab then
 			hl.plugin.alttab.prev()
 		end
 	end, { description = "Alt+Tab: prev (hypr-alt-tab)" })

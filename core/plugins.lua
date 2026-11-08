@@ -1,33 +1,29 @@
 local M = {}
 
 function M.setup()
-    hl.config({
-        plugin = {
-            -- hyprexpo = {
-            --     columns = 3,
-            --     gaps_in = 5,
-            --     gaps_out = 0,
-            --     bg_col = "rgb(111111)",
-            --     workspace_method = "center current",
-            --     gesture_distance = 200,
-            --     cancel_key = "escape",
-            --     show_cursor = 1,
-            --     keynav_enable = 1,
-            -- },
-            scrolloverview = {
-                gesture_distance = 200,
-                scale = 0.5,
-                workspace_gap = 50,
-                layout = "vertical",
-            },
-            -- hypr-alt-tab (requires Config V2 registration in plugin)
-            alttab = {
-                release_key = "Alt_L",
-                include_special = 0,
-                animations = 1,
-            },
-        },
-    })
+    local function loaded(name)
+        return hl.plugin ~= nil and hl.plugin[name] ~= nil
+    end
+
+    local opts = {}
+    if loaded("scrolloverview") then
+        opts.scrolloverview = {
+            gesture_distance = 200,
+            scale = 0.5,
+            workspace_gap = 50,
+            layout = "vertical",
+        }
+    end
+    if loaded("alttab") then
+        opts.alttab = {
+            release_key = "Alt_L",
+            include_special = 0,
+            animations = 1,
+        }
+    end
+    if next(opts) then
+        hl.config({ plugin = opts })
+    end
 
     -- hl.define_submap("hyprexpo", function()
     -- hl.bind("left",      function() hl.plugin.hyprexpo.kb_focus("left") end)
@@ -38,16 +34,29 @@ function M.setup()
     -- hl.bind("escape", function() hl.plugin.hyprexpo.expo("cancel") end)
     -- end)
 
+    local function so(fn, ...)
+        local args = { ... }
+        return function()
+            local p = hl.plugin and hl.plugin.scrolloverview
+            if p and p[fn] then
+                p[fn](table.unpack(args))
+            end
+        end
+    end
+
     hl.define_submap("scrolloverview", function()
-        hl.bind("left",   hl.plugin.scrolloverview.navigate("left"))
-        hl.bind("right",  hl.plugin.scrolloverview.navigate("right"))
-        hl.bind("up",     hl.plugin.scrolloverview.navigate("up"))
-        hl.bind("down",   hl.plugin.scrolloverview.navigate("down"))
+        hl.bind("left", so("navigate", "left"))
+        hl.bind("right", so("navigate", "right"))
+        hl.bind("up", so("navigate", "up"))
+        hl.bind("down", so("navigate", "down"))
         hl.bind("return", function()
-            hl.plugin.scrolloverview.window("select")
-            hl.plugin.scrolloverview.overview("off")
+            local p = hl.plugin and hl.plugin.scrolloverview
+            if p then
+                p.window("select")
+                p.overview("off")
+            end
         end)
-        hl.bind("escape", hl.plugin.scrolloverview.overview("off"))
+        hl.bind("escape", so("overview", "off"))
     end)
 end
 

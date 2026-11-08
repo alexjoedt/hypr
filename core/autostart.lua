@@ -14,6 +14,7 @@ function M.setup()
 		--hl.exec_cmd("qs -c noctalia-shell")
 		--hl.exec_cmd("noctalia")
 		hl.exec_cmd("hypridle -q")
+		hl.exec_cmd("easyeffects -w")
 		-- Firefox/libwebrtc braucht XDG_SESSION_TYPE=wayland fuer PipeWire-Screensharing.
 		-- hl.env setzt Variablen nur im Hyprland-Prozess; elephant laeuft als systemd
 		-- user service und braucht sie aus der systemd user environment. Import vor

@@ -97,3 +97,15 @@
 - Verified: hyprctl reload ok, helper bind descriptions present (100 binds)
 
 **Remaining**: nothing
+
+## 2026-11-10 — Fix black screen after unplugging external with eDP-1 off
+
+**What**: `core/monitors.lua` no longer counts `FALLBACK`/`HEADLESS-*` outputs as external monitors; `monitor.removed` excludes the removed output and re-applies the policy via a 1s oneshot `hl.timer`.
+
+**Why**: Lid closed + only external active, then unplug → Hyprland moved workspaces to its placeholder output `FALLBACK`. `get_external_monitors()` treated it as external, so eDP-1 stayed disabled, also on lid open → black screen until reboot.
+
+**Details**:
+- Evidence: hwmd log `moveworkspacev2: unknown monitor "FALLBACK"` at unplug; logind "Lid opened" 6s later, Hyprland still running
+- Not physically re-tested yet (needs unplug with lid closed)
+
+**Remaining**: verify with a real unplug

@@ -13,10 +13,23 @@ local state = {
 	extend_laptop = false,
 }
 
-local function get_external_monitors()
+-- FALLBACK is the placeholder output Hyprland creates when the last real
+-- monitor disappears (e.g. unplugging the external while eDP-1 is off).
+-- Counting it as external kept eDP-1 disabled forever → black screen.
+-- `exclude` covers monitor.removed, where the removed output may still be
+-- listed by hl.get_monitors().
+local function is_external(mon, exclude)
+	local name = mon.name
+	return name ~= "eDP-1"
+		and name ~= "FALLBACK"
+		and not name:match("^HEADLESS")
+		and name ~= exclude
+end
+
+local function get_external_monitors(exclude)
 	local external = {}
 	for _, mon in ipairs(hl.get_monitors()) do
-		if mon.name ~= "eDP-1" then
+		if is_external(mon, exclude) then
 			table.insert(external, mon)
 		end
 	end
@@ -61,8 +74,8 @@ end
 -- Re-evaluate and apply the current display policy. Safe to call repeatedly
 -- (idempotent) — this is the single source of truth called from every
 -- trigger (startup, hotplug, lid open).
-local function apply_display_policy()
-	local external = get_external_monitors()
+local function apply_display_policy(exclude)
+	local external = get_external_monitors(exclude)
 
 	if #external == 0 then
 		-- No external monitor: laptop screen is always on.
@@ -101,7 +114,9 @@ function M.setup()
 	-- directly via enable/disable_edp1, and it fires its own added/removed
 	-- events when toggled.
 	apply_display_policy()
-	hl.on("hyprland.start", apply_display_policy)
+	hl.on("hyprland.start", function()
+		apply_display_policy()
+	end)
 	hl.on("monitor.added", function(mon)
 		if mon.name ~= "eDP-1" then
 			apply_display_policy()
@@ -110,7 +125,11 @@ function M.setup()
 	end)
 	hl.on("monitor.removed", function(mon)
 		if mon.name ~= "eDP-1" then
-			apply_display_policy()
+			apply_display_policy(mon.name)
+			-- Safety net: re-check once the output list has settled.
+			hl.timer(function()
+				apply_display_policy()
+			end, { timeout = 1000, type = "oneshot" })
 		end
 		on_layout_changed()
 	end)

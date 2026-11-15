@@ -109,3 +109,16 @@
 - Not physically re-tested yet (needs unplug with lid closed)
 
 **Remaining**: verify with a real unplug
+
+## 2026-11-15 — Hyprland freeze after unplugging external (lid open, eDP-1 off)
+
+**What**: `core/monitors.lua`: `enable_edp1()` is a no-op when eDP-1 is already enabled; `monitor.added`/`monitor.removed` ignore `FALLBACK`/`HEADLESS-*`; `on_layout_changed()` (focus reset + float fit) runs debounced via a 500ms oneshot timer, also for `workspace.move_to_monitor`.
+
+**Why**: Unplug at 16:49:11 → FALLBACK created and removed again (eDP-1 came up, so the 2026-11-10 fix worked), then Hyprland's main loop hung: hwmd IPC `i/o timeout`, no events on replug, hard power-off. Suspected cause: `hl.monitor()` re-applied up to 3x and resize/center dispatched to windows mid-hotplug.
+
+**Details**:
+- No coredump, no crash report, no amdgpu errors; hyprland.log lost (tmpfs in /run)
+- On the next freeze: TTY (Ctrl+Alt+F3), copy `$XDG_RUNTIME_DIR/hypr/*/hyprland.log`, `gdb -p $(pidof Hyprland) -batch -ex 'thread apply all bt'`
+- Verified: `hyprctl reload` ok, no configerrors
+
+**Remaining**: verify with a real unplug

@@ -18,12 +18,22 @@ local state = {
 -- Counting it as external kept eDP-1 disabled forever → black screen.
 -- `exclude` covers monitor.removed, where the removed output may still be
 -- listed by hl.get_monitors().
+local function is_placeholder(name)
+	return name == "FALLBACK" or name:match("^HEADLESS") ~= nil
+end
+
 local function is_external(mon, exclude)
 	local name = mon.name
-	return name ~= "eDP-1"
-		and name ~= "FALLBACK"
-		and not name:match("^HEADLESS")
-		and name ~= exclude
+	return name ~= "eDP-1" and not is_placeholder(name) and name ~= exclude
+end
+
+local function edp1_active()
+	for _, mon in ipairs(hl.get_monitors()) do
+		if mon.name == "eDP-1" then
+			return mon.enabled ~= false
+		end
+	end
+	return false
 end
 
 local function get_external_monitors(exclude)
@@ -51,7 +61,12 @@ end
 -- the field does not clear a prior `disabled = true` rule (confirmed by
 -- testing live: the screen stayed off until `disabled = false` was passed
 -- alongside mode/position/scale).
+-- Skipped when eDP-1 is already up: every hl.monitor() call re-applies the
+-- monitor rules, and an unplug triggers this several times within ~1s.
 local function enable_edp1()
+	if edp1_active() then
+		return
+	end
 	hl.monitor({ output = "eDP-1", disabled = false, mode = "1440x900@60.00Hz", position = "auto", scale = 1 })
 end
 
@@ -66,9 +81,21 @@ end
 -- workspace ends up on a different display: focus-mode side gaps and
 -- floating window geometry. Reset both for every workspace; both calls
 -- are no-ops for workspaces that are not affected.
+--
+-- Deferred and debounced: running it inside a hotplug event dispatched
+-- resize/center to windows whose monitor was still being torn down.
+local layout_pending = false
+
 local function on_layout_changed()
-	require("core.focus").reset_all()
-	require("core.float").fit_all()
+	if layout_pending then
+		return
+	end
+	layout_pending = true
+	hl.timer(function()
+		layout_pending = false
+		require("core.focus").reset_all()
+		require("core.float").fit_all()
+	end, { timeout = 500, type = "oneshot" })
 end
 
 -- Re-evaluate and apply the current display policy. Safe to call repeatedly
@@ -117,13 +144,21 @@ function M.setup()
 	hl.on("hyprland.start", function()
 		apply_display_policy()
 	end)
+	-- Placeholder outputs (FALLBACK, HEADLESS-*) come and go as a side effect
+	-- of the real hotplug; reacting to them only re-ran the policy mid-swap.
 	hl.on("monitor.added", function(mon)
+		if is_placeholder(mon.name) then
+			return
+		end
 		if mon.name ~= "eDP-1" then
 			apply_display_policy()
 		end
 		on_layout_changed()
 	end)
 	hl.on("monitor.removed", function(mon)
+		if is_placeholder(mon.name) then
+			return
+		end
 		if mon.name ~= "eDP-1" then
 			apply_display_policy(mon.name)
 			-- Safety net: re-check once the output list has settled.
@@ -136,9 +171,8 @@ function M.setup()
 
 	-- Fires once per workspace that lands on another display (Hyprland's own
 	-- migration on unplug as well as migrate_workspaces_off_edp1 above).
-	hl.on("workspace.move_to_monitor", function(ws)
-		require("core.focus").reset(ws.id)
-		require("core.float").fit_workspace(ws)
+	hl.on("workspace.move_to_monitor", function()
+		on_layout_changed()
 	end)
 
 	-- Lid closed: the panel is physically covered either way, so always

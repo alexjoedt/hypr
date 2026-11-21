@@ -190,7 +190,7 @@ function M.setup(opts)
 
 	-- Groups (tabbed windows)
 	hl.bind(mainMod .. " + G", hl.dsp.group.toggle(), { description = "Toggle window group" }) -- create / dissolve group
-	hl.bind(mainMod .. " + SHIFT + G", hl.dsp.group.lock_active(), { description = "Lock window group" }) -- lock group (no auto-join)
+	hl.bind(mainMod .. " + SHIFT + G", hl.dsp.group.lock(), { description = "Lock window group" }) -- lock group (no auto-join)
 	hl.bind(mainMod .. " + Tab", hl.dsp.group.next(), { description = "Next tab in group" })
 	hl.bind(mainMod .. " + SHIFT + Tab", hl.dsp.group.prev(), { description = "Previous tab in group" })
 
